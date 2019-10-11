@@ -2,6 +2,10 @@
 const path = require("path");
 const express = require("express");
 const http = require("http");
+const stream = require("stream");
+const mysql = require("mysql");
+const bcrypt = require("bcrypt");
+const fileupload = require("express-fileupload");
 
 const app = express();
 const dir = path.join(__dirname, "public");
