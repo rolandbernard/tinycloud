@@ -1,0 +1,264 @@
+
+html, body {
+    margin: 0;
+    max-width: 100%;
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+}
+
+#page {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+#header {
+    width: 100%;
+    background-color: #44a6c6;
+    flex: 0 0 auto;
+    height: 3em;
+}
+
+#logo {
+    height: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.125em;
+}
+
+#user {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: inherit;
+}
+
+#userevatar {
+    height: 90%;
+    border-radius: 50%;
+    margin-right: 0.25em;
+    margin-top: 0.125em;
+    border: 1px solid white;
+}
+
+#userevatar:hover {
+    cursor: pointer;
+    border: 1px solid lightgrey;
+}
+
+#explorer {
+    flex: 1 1 auto;
+    padding: 0 0 0 1%;
+}
+
+#path {
+    margin: 0.5em 0.5em 2em 0.5em;
+    border-bottom: 1px solid lightgrey;
+    padding: 0.2em;
+    overflow: hidden;
+    white-space: nowrap
+}
+
+.pathseperator {
+    display: inline-block;
+    width: 0;
+    height: 1em;
+    border: 1px solid lightgrey;
+    vertical-align: middle;
+}
+
+#rootsvg {
+    width: 100%;
+    height: 100%;
+}
+
+#pathroot {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+.pathelement {
+    font-family: "Roboto Mono", monospace;
+    font-size: 1em;
+    color: black;
+    padding: 0.4em 0.75em 0.4em 0.75em;
+    border-radius: 0.5em;
+    display: inline-block;
+    white-space: nowrap
+}
+
+.pathelement:hover {
+    background: #eeeeee;
+    cursor: pointer;
+}
+
+.dirview {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+}
+
+.entry, .dirviewheader {
+    flex: 0 1 auto;
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.dirviewheader {
+    padding: 0.5em;
+}
+
+.entry {
+    padding: 0.5em 0.5em 0.5em 0.5em;
+}
+
+.entry:hover {
+    background: #eeeeee;
+    cursor: pointer;
+}
+
+.dirviewcell {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: visible; /* TOFIX */
+    margin: auto;
+}
+
+.entryiconname {
+    width: 100%;
+    height: 1.2em;
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.entryexpand {
+    width: 0.6em;
+    height: 0.6em;
+    flex: 0 0 auto;
+    margin: auto;
+    margin-right: 0.5em;
+    transition: 0.2s linear;
+    transform-origin: 20% 50%;
+}
+
+.entryicon {
+    height: 1.5em;
+    width: 1.5em;
+    flex: 0 0 auto;
+    margin-top: -0.125em;
+}
+
+.entryname {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.85em;
+    padding-left: 0.75em;
+    flex: 1 1 auto;
+}
+
+.entrydetails {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    color: #777777;
+    width: 30vw;
+    flex: 1 1 auto;
+}
+
+.entryowner {
+    min-width: 5em;
+}
+
+.entrylastmodified {
+    min-width: 10em;
+}
+
+.dirviewheadercell {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    color: #777777;
+    flex: 1 1 auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#dirviewname {
+    width: 100%;
+}
+
+#dirviewowner, #dirviewlastmodified, #dirviewfilesize {
+    width: 30vw;
+    flex: 1 1 auto;
+}
+
+#dirviewowner {
+    min-width: 5em;
+}
+
+#dirviewlastmodified {
+    min-width: 10em;
+}
+
+#newsvg {
+    height: 1.5em;
+    width: 1.5em;
+    display: inline-block;
+    padding: 0.25em;
+    vertical-align: middle;
+}
+
+#newtext {
+    font-family: "Roboto Mono", monospace;
+    font-size: 1em;
+    color: #777777;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0.25em;
+}
+
+#new {
+    position: absolute;
+    width: max-content;
+    bottom: 1em;
+    right: 1em;
+    padding: 0.5em;
+    border-radius: 2em;
+    box-shadow: 0 0 0.5em 0 lightgrey;
+}
+
+#new:hover {
+    background: lightgrey;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 60em) {
+    #dirviewfilesize {
+        display: none;
+    }
+    .entryfilesize {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 40em) {
+    #dirviewowner {
+        display: none;
+    }
+    .entryowner {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 20em) {
+    #dirviewlastmodified {
+        display: none;
+    }
+    .entrylastmodified {
+        display: none;
+    }
+}

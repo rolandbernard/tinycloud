@@ -1,8 +1,80 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <title>Test</title>
+        <title>Change this title</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="html5reset.css">
+        <link rel="stylesheet" href="fonts.css">
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" href="logoblue.svg">
     </head>
     <body>
-        <h2>This is a test</h2>
+        <div id="page">
+            <div id="header">
+                <img id="logo" src="logowhite.svg"/>
+                <div id="user">
+                    <img id="userevatar" src="avatarplaceholder.png"/>
+                </div>
+            </div>
+            <div id="explorer">
+                <div id="path">
+                    <div id="pathroot" class="pathelement"><img id="rootsvg" src="root.svg"/></div><div class="pathseperator"></div><div class="pathelement">Data</div><div class="pathseperator"></div><div class="pathelement">More</div><div class="pathseperator"></div>
+                </div>
+                <div class="dirviewheader">
+                    <div id="dirviewname" class="dirviewcell dirviewheadercell">Name</div>
+                    <div id="dirviewowner" class="dirviewcell dirviewheadercell">Owner</div>
+                    <div id="dirviewlastmodified" class="dirviewcell dirviewheadercell">Last modified</div>
+                    <div id="dirviewfilesize" class="dirviewcell dirviewheadercell">File size</div>
+                </div>
+                <div class="dirview">
+                    <div class="entry">
+                        <div class="dirviewcell entryiconname">
+                            <img class="entryexpand" src="expand.svg"/>
+                            <img class="dirviewcell entryicon" src="folder.svg"/>
+                            <div class="dirviewcell entryname">Test1</div>
+                        </div>
+                        <div class="dirviewcell entrydetails entryowner">me</div>
+                        <div class="dirviewcell entrydetails entrylastmodified">5.11.2019 me</div>
+                        <div class="dirviewcell entrydetails entryfilesize">-</div>
+                    </div>
+                    <div class="entry">
+                        <div class="dirviewcell entryiconname">
+                            <div class="entryexpand"></div>
+                            <img class="dirviewcell entryicon" src="file.svg"/>
+                            <div class="dirviewcell entryname">Test2.txt</div>
+                        </div>
+                        <div class="dirviewcell entrydetails entryowner">me</div>
+                        <div class="dirviewcell entrydetails entrylastmodified">11.12.2018 me</div>
+                        <div class="dirviewcell entrydetails entryfilesize">75kB</div>
+                    </div>
+                    <div class="entry">
+                        <div class="dirviewcell entryiconname">
+                            <div class="entryexpand"></div>
+                            <img class="dirviewcell entryicon" src="file.svg"/>
+                            <div class="dirviewcell entryname">Test2.png</div>
+                        </div>
+                        <div class="dirviewcell entrydetails entryowner">MrMobi</div>
+                        <div class="dirviewcell entrydetails entrylastmodified">7.4.2017 MrMobi</div>
+                        <div class="dirviewcell entrydetails entryfilesize">55MB</div>
+                    </div>
+                    <div class="entry">
+                        <div class="dirviewcell entryiconname">
+                            <div class="entryexpand"></div>
+                            <img class="dirviewcell entryicon" src="file.svg"/>
+                            <div class="dirviewcell entryname">Test3.txt</div>
+                        </div>
+                        <div class="dirviewcell entrydetails entryowner">me</div>
+                        <div class="dirviewcell entrydetails entrylastmodified">3.9.2019 MrMobi</div>
+                        <div class="dirviewcell entrydetails entryfilesize">17kB</div>
+                    </div>
+                </div>
+            </div>
+            <div id="new">
+                <img id="newsvg" src="new.svg"/><div id="newtext">New</div>
+            </div>
+        </div>
     </body>
 </html>
