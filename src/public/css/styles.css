@@ -41,12 +41,12 @@ html, body {
     border-radius: 50%;
     margin-right: 0.25em;
     margin-top: 0.125em;
-    border: 1px solid white;
+    border: 1px solid #44a6c6;
 }
 
 #useravatar:hover {
     cursor: pointer;
-    border: 1px solid lightgrey;
+    box-shadow: 0 0 0.5em 0 lightgrey;
 }
 
 #explorer {
@@ -64,7 +64,7 @@ html, body {
     overflow: hidden;
     white-space: nowrap;
     flex: 0 0 auto;
-    height: max-content;
+    height: 2em;
 }
 
 .pathseperator {
@@ -73,11 +73,6 @@ html, body {
     height: 1em;
     border: 1px solid lightgrey;
     vertical-align: middle;
-}
-
-#rootsvg {
-    width: 100%;
-    height: 100%;
 }
 
 #pathroot {
@@ -121,8 +116,8 @@ html, body {
 
 .dirviewheader {
     padding: 0.5em;
-    height: max-content;
     flex: 0 0 auto;
+    overflow-y: scroll;
 }
 
 .entry {
@@ -132,6 +127,14 @@ html, body {
 .entry:hover {
     background: #eeeeee;
     cursor: pointer;
+}
+
+.entryactive {
+    background: lightblue;
+}
+
+.entryactive:hover {
+    background: lightblue;
 }
 
 .dirviewcell {
@@ -152,23 +155,20 @@ html, body {
 
 .entryexpand {
     flex: 0 0 auto;
-    width: 1.1em;
+    width: 1.5em;
 }
 
 .entryexpandsvg {
-    width: 0.6em;
-    height: 0.6em;
-    margin: auto;
-    margin-right: 0.5em;
-    transform-origin: 20% 50%;
-    margin-top: 0.32em;
+    width: 1.75em;
+    height: 1.75em;
+    margin-top: -0.3em;
 }
 
 .entryicon {
-    height: 1.5em;
-    width: 1.5em;
+    height: 2em;
+    width: 2em;
     flex: 0 0 auto;
-    margin-top: -0.125em;
+    margin-top: -0.4em;
 }
 
 .entryname {
@@ -266,20 +266,24 @@ html, body {
     /* box-shadow: -3px 0 0 0 lightgrey; */
 }
 
-#newmenu, #contextmenu {
+#newmenu, #contextmenu , #usermenu {
     position: absolute;
-    right: 1em;
-    bottom: 1em;
     background: white;
     box-shadow: 0 0 0.5em 0 lightgrey;
     border-radius: 0.3em;
     flex-flow: column;
     z-index: 30;
+    white-space: nowrap;
 }
 
-#contextmenu {
-    height: 30em;
-    width: 10em;
+#newmenu {
+    right: 1em;
+    bottom: 1em;
+}
+
+#usermenu {
+    right: 0.1em;
+    top: 2em;
 }
 
 hr {

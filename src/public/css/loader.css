@@ -8,6 +8,7 @@
 
 .loaderellipsis div {
     position: absolute;
+    top: 0.25em;
     width: 1em;
     height: 1em;
     border-radius: 50%;

@@ -9,6 +9,7 @@ const fileupload = require("express-fileupload");
 
 const auth = require("./auth.js");
 const avatar = require("./avatar.js");
+const password = require("./password.js");
 const download = require("./download.js");
 const drive = require("./drive.js");
 
@@ -23,6 +24,7 @@ app.use(function (req, res, next) {
 });
 app.use("/static/", express.static(dir));
 app.use("/avatar/", avatar);
+app.use("/password/", password);
 app.use("/drive/", drive);
 app.use("/download/", download);
 app.use("/auth/", auth);
