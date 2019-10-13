@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Change this title</title>
+        <title>TinyCloud</title>
         <meta name="description" content="">
         <meta name="keywords" content="">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="html5reset.css">
-        <link rel="stylesheet" href="fonts.css">
-        <link rel="stylesheet" href="styles.css">
-        <link rel="icon" href="logoblue.svg">
+        <link rel="stylesheet" href="/static/css/html5reset.css">
+        <link rel="stylesheet" href="/static/css/fonts.css">
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <link rel="stylesheet" href="/static/css/loader.css">
+        <link rel="icon" href="/static/logo/logoblue.svg">
+        <script src="/static/js/script.js"></script>
     </head>
     <body>
         <div id="page">
             <div id="header">
-                <img id="logo" src="logowhite.svg"/>
+                <img id="logo" src="/static/logo/logowhite.svg"/>
                 <div id="user">
-                    <img id="userevatar" src="avatarplaceholder.png"/>
                 </div>
             </div>
-            <div id="explorer">
+            <div id="explorer" style="display: none;">
                 <div id="path">
-                    <div id="pathroot" class="pathelement"><img id="rootsvg" src="root.svg"/></div><div class="pathseperator"></div><div class="pathelement">Data</div><div class="pathseperator"></div><div class="pathelement">More</div><div class="pathseperator"></div>
+                    <div id="pathroot" class="pathelement"><img id="rootsvg" src="/static/icon/root.svg"/></div>
                 </div>
                 <div class="dirviewheader">
                     <div id="dirviewname" class="dirviewcell dirviewheadercell">Name</div>
@@ -29,52 +30,45 @@
                     <div id="dirviewlastmodified" class="dirviewcell dirviewheadercell">Last modified</div>
                     <div id="dirviewfilesize" class="dirviewcell dirviewheadercell">File size</div>
                 </div>
-                <div class="dirview">
-                    <div class="entry">
-                        <div class="dirviewcell entryiconname">
-                            <img class="entryexpand" src="expand.svg"/>
-                            <img class="dirviewcell entryicon" src="folder.svg"/>
-                            <div class="dirviewcell entryname">Test1</div>
-                        </div>
-                        <div class="dirviewcell entrydetails entryowner">me</div>
-                        <div class="dirviewcell entrydetails entrylastmodified">5.11.2019 me</div>
-                        <div class="dirviewcell entrydetails entryfilesize">-</div>
-                    </div>
-                    <div class="entry">
-                        <div class="dirviewcell entryiconname">
-                            <div class="entryexpand"></div>
-                            <img class="dirviewcell entryicon" src="file.svg"/>
-                            <div class="dirviewcell entryname">Test2.txt</div>
-                        </div>
-                        <div class="dirviewcell entrydetails entryowner">me</div>
-                        <div class="dirviewcell entrydetails entrylastmodified">11.12.2018 me</div>
-                        <div class="dirviewcell entrydetails entryfilesize">75kB</div>
-                    </div>
-                    <div class="entry">
-                        <div class="dirviewcell entryiconname">
-                            <div class="entryexpand"></div>
-                            <img class="dirviewcell entryicon" src="file.svg"/>
-                            <div class="dirviewcell entryname">Test2.png</div>
-                        </div>
-                        <div class="dirviewcell entrydetails entryowner">MrMobi</div>
-                        <div class="dirviewcell entrydetails entrylastmodified">7.4.2017 MrMobi</div>
-                        <div class="dirviewcell entrydetails entryfilesize">55MB</div>
-                    </div>
-                    <div class="entry">
-                        <div class="dirviewcell entryiconname">
-                            <div class="entryexpand"></div>
-                            <img class="dirviewcell entryicon" src="file.svg"/>
-                            <div class="dirviewcell entryname">Test3.txt</div>
-                        </div>
-                        <div class="dirviewcell entrydetails entryowner">me</div>
-                        <div class="dirviewcell entrydetails entrylastmodified">3.9.2019 MrMobi</div>
-                        <div class="dirviewcell entrydetails entryfilesize">17kB</div>
-                    </div>
+                <div id="rootdirectory">
                 </div>
             </div>
-            <div id="new">
-                <img id="newsvg" src="new.svg"/><div id="newtext">New</div>
+            <div id="login" style="display: none;">
+                <form name="login" id="loginform">
+                    <div id="signinheader">Sign in</div>
+                    <div class="infotext">Username</div>
+                    <input id="username" name="username" type="text"  autocomplete="off"/>
+                    <div class="infotext">Password</div>
+                    <input id="password" name="password" type="password"/>
+                    <div id="infotexterror" class="infotext"></div>
+                    <div id="rememberall"><input id="rememberme" type="checkbox"/><div id="remembertext">Remember me</div></div>
+                    <input id="signin" type="submit" value="Sign in"/>
+                </form>
             </div>
+            <div id="initialloader" class="loaderellipsis">
+                <div></div><div></div><div></div><div></div>
+            </div>
+        </div>
+        <div id="new" style="display: none">
+            <img id="newsvg" src="/static/icon/new.svg"/><div id="newtext">New</div>
+        </div>
+        <div id="newmenu" style="display: none">
+            <div class="menupoint">
+                <img class="menusvg" src="/static/icon/newfolder.svg"/><div class="menutext">Folder</div>
+            </div>
+            <hr>
+            <div class="menupoint">
+                <img class="menusvg" src="/static/icon/upload.svg"/><div class="menutext">Upload file</div>
+            </div>
+            <div class="menupoint">
+                <img class="menusvg" src="/static/icon/upload.svg"/><div class="menutext">Upload folder</div>
+            </div>
+            <hr>
+            <div class="menupoint">
+                <img class="menusvg" src="/static/icon/share.svg"/><div class="menutext">Add shared</div>
+            </div>
+        </div>
+        <div id="contextmenu" style="display: none">
         </div>
     </body>
 </html>

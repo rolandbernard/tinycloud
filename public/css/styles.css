@@ -11,6 +11,7 @@ html, body {
     display: flex;
     flex-flow: column;
     height: 100%;
+    z-index: 10;
 }
 
 #header {
@@ -35,7 +36,7 @@ html, body {
     height: inherit;
 }
 
-#userevatar {
+#useravatar {
     height: 90%;
     border-radius: 50%;
     margin-right: 0.25em;
@@ -43,7 +44,7 @@ html, body {
     border: 1px solid white;
 }
 
-#userevatar:hover {
+#useravatar:hover {
     cursor: pointer;
     border: 1px solid lightgrey;
 }
@@ -51,6 +52,9 @@ html, body {
 #explorer {
     flex: 1 1 auto;
     padding: 0 0 0 1%;
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
 }
 
 #path {
@@ -58,7 +62,9 @@ html, body {
     border-bottom: 1px solid lightgrey;
     padding: 0.2em;
     overflow: hidden;
-    white-space: nowrap
+    white-space: nowrap;
+    flex: 0 0 auto;
+    height: max-content;
 }
 
 .pathseperator {
@@ -101,6 +107,11 @@ html, body {
     width: 100%;
 }
 
+#rootdirectory {
+    overflow-y: scroll; 
+    flex: 1 1 auto;
+}
+
 .entry, .dirviewheader {
     flex: 0 1 auto;
     border-bottom: 1px solid lightgrey;
@@ -110,6 +121,8 @@ html, body {
 
 .dirviewheader {
     padding: 0.5em;
+    height: max-content;
+    flex: 0 0 auto;
 }
 
 .entry {
@@ -138,13 +151,17 @@ html, body {
 }
 
 .entryexpand {
+    flex: 0 0 auto;
+    width: 1.1em;
+}
+
+.entryexpandsvg {
     width: 0.6em;
     height: 0.6em;
-    flex: 0 0 auto;
     margin: auto;
     margin-right: 0.5em;
-    transition: 0.2s linear;
     transform-origin: 20% 50%;
+    margin-top: 0.32em;
 }
 
 .entryicon {
@@ -165,8 +182,11 @@ html, body {
     font-family: "Roboto Mono", monospace;
     font-size: 0.75em;
     color: #777777;
-    width: 30vw;
-    flex: 1 1 auto;
+    width: 20vw;
+    max-width: 20em;
+    flex: 0 0 auto;
+    overflow: hidden;
+    height: 1.25em;
 }
 
 .entryowner {
@@ -181,7 +201,6 @@ html, body {
     font-family: "Roboto Mono", monospace;
     font-size: 0.75em;
     color: #777777;
-    flex: 1 1 auto;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -189,11 +208,13 @@ html, body {
 
 #dirviewname {
     width: 100%;
+    flex: 1 1 auto;
 }
 
 #dirviewowner, #dirviewlastmodified, #dirviewfilesize {
-    width: 30vw;
-    flex: 1 1 auto;
+    width: 20vw;
+    max-width: 20em;
+    flex: 0 0 auto;
 }
 
 #dirviewowner {
@@ -219,6 +240,8 @@ html, body {
     display: inline-block;
     vertical-align: middle;
     padding: 0.25em;
+    height: min-content;
+    margin: auto;
 }
 
 #new {
@@ -229,11 +252,158 @@ html, body {
     padding: 0.5em;
     border-radius: 2em;
     box-shadow: 0 0 0.5em 0 lightgrey;
+    background: white;
+    z-index: 20;
 }
 
 #new:hover {
     background: lightgrey;
     cursor: pointer;
+}
+
+.subdirectory {
+    margin-left: 1em;
+    /* box-shadow: -3px 0 0 0 lightgrey; */
+}
+
+#newmenu, #contextmenu {
+    position: absolute;
+    right: 1em;
+    bottom: 1em;
+    background: white;
+    box-shadow: 0 0 0.5em 0 lightgrey;
+    border-radius: 0.3em;
+    flex-flow: column;
+    z-index: 30;
+}
+
+#contextmenu {
+    height: 30em;
+    width: 10em;
+}
+
+hr {
+    margin: 0;
+    height: 1px;
+    background: lightgrey;
+    border: none;
+}
+
+.menupoint {
+    flex: 0 0 auto;
+    padding: 0.25em 0.5em 0.25em 0.5em;
+}
+
+.menupoint:hover {
+    background: lightgrey;
+    cursor: pointer;
+}
+
+.menusvg {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.menutext {
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    margin-left: 0.5em;
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    color: #111111;
+}
+
+#login {
+    flex: 1 1 auto;
+}
+
+#loginform {
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background: white;
+    box-shadow: 0 0 0.5em 0 lightgrey;
+    border-radius: 0.3em;
+    z-index: 30;
+    padding: 0.25em;
+}
+
+#signinheader {
+    font-family: "Roboto Mono", monospace;
+    font-size: 1em;
+    padding: 0.5em;
+    text-align: center;
+    border-bottom: 2px solid #44a6c6;
+    margin: auto;
+    width: auto;
+}
+
+#username, #password, #signin { 
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.85em;
+    display: block;
+    margin: 0.5em;
+    padding: 0.5em;
+    width: 20em;
+    border: 1px solid lightgray;
+    border-radius: 0.3em;
+    box-sizing: content-box;
+}
+
+#username:focus, #password:focus {
+    box-shadow: 0 0 0.5em 0 #44a6c6;
+}
+
+#rememberall {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    margin-top: 1.5em;
+}
+
+#rememberme, #remembertext {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+#signin {
+    margin-top: 1em;
+}
+
+#signin:hover {
+    cursor: pointer;
+}
+
+.infotext {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    margin: 1em 1em 0.5em 0.5em;
+    padding: 0.25em;
+}
+
+#infotexterror {
+    color: red;
+    height: 1em;
+}
+
+#error404 {
+    font-family: "Roboto Mono", monospace;
+    font-size: 1em;
+    display: block;
+    margin: auto;
+    padding: 2em;
+    text-align: center;
+    background: white;
+    box-shadow: 0 0 5px 0 lightgray;
+    border-radius: 0.3em;
+}
+
+#error404 h1 {
+    font-family: "Roboto Mono", monospace;
+    font-size: 5em;
 }
 
 @media only screen and (max-width: 60em) {
