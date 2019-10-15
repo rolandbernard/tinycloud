@@ -302,6 +302,7 @@ function generate_entry(parent, data) {
     nodefilesize.classList.add("entrydetails");
     nodefilesize.classList.add("entryfilesize");
     nodefilesize.appendChild(document.createTextNode(generate_filesize_string(data.filesize)));
+    node.append(nodefilesize);
     node.addEventListener("contextmenu", function (event) {
         const contextmenu = document.getElementById("contextmenu");
         if(contextmenu.style.display === "none") {
