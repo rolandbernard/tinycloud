@@ -39,6 +39,7 @@ nicht an Drittunternehmen weitergeleitet.
 
 ## 8. Budget
 0€ + Arbeit
+
 Die Webanwendung muss ohne jeglichem Aufwand von finanziellen Mitteln realisiert
 werden.
 
