@@ -7,6 +7,7 @@ WITH RECURSIVE cte_entrys (eid, parentid, ownerid) AS (
         FROM sharepoints sp
         JOIN shares s ON (s.sid = sp.spshareid)
         JOIN entrys e ON (e.eid = s.sentryid)
+        WHERE sp.spid = UUID_TO_BIN(:entryuuid)
     UNION
     SELECT e.eid, e.eparentid, e.eownerid
     	FROM entrys AS e, cte_entrys AS ce
