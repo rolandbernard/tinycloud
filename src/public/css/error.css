@@ -1,0 +1,17 @@
+
+#error {
+    font-family: "Roboto Mono", monospace;
+    font-size: 1em;
+    display: block;
+    margin: auto;
+    padding: 2em;
+    text-align: center;
+    background: white;
+    box-shadow: 0 0 5px 0 lightgray;
+    border-radius: 0.3em;
+}
+
+#error h1 {
+    font-family: "Roboto Mono", monospace;
+    font-size: 5em;
+}
