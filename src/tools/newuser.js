@@ -2,13 +2,25 @@
 const bcrypt = require("bcrypt");
 const sharp = require("sharp");
 const fs = require("fs");
+const path = require("path");
+const mysql = require("mysql2");
 
-const db = require("../server/db.js");
-const config = require("../server/config.js");
+const config = require("../config.js");
 
-main();
+const db  = mysql.createConnection({
+    host: config.db.host,
+    user: config.db.user,
+    password: config.db.password,
+    database: config.db.database,
+    namedPlaceholders: true,
+    multipleStatements: true
+});
 
-async function main() {
+const sql = {
+    insertuser: fs.readFileSync(path.join(__dirname, "./sql/insertuser.sql"), "utf8")
+};
+
+(async function () {
     let username = null;
     let password = null;
     let avatarfile = null;
@@ -63,13 +75,13 @@ async function main() {
         avatar = await sharp(fs.readFileSync(avatarfile)).resize(128).png().toBuffer();
     }
 
-    db.promise().execute("INSERT INTO users(uid, uusername, upasswdhash, uavatar) VALUES (UUID_TO_BIN(UUID()), ?, ?, ?);", [username, passwordhash, avatar])
-    .then(function () {
-        console.log("Added user");
-        process.exit(0);
-    })
-    .catch(function (error) {
-        console.error(error.message);
-        process.exit(1);
-    });
-}
+    db.promise().query(sql.insertuser, { username: username, passwordhash: passwordhash, avatar: avatar })
+        .then(function () {
+            console.log("Added user");
+            process.exit(0);
+        })
+        .catch(function (error) {
+            console.error(error.message);
+            process.exit(1);
+        });
+}) ();

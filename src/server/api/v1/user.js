@@ -3,14 +3,14 @@ const path = require("path");
 const express = require("express");
 const bcrypt = require("bcrypt");
 
-const config = require("./config.js");
-const db = require("./db.js");
+const config = require("../../../config.js");
+const db = require("../../db.js");
 
 const app = express();
 
 app.get("/:username/avatar", async function (req, res) {
     try {
-        const [rows, fields] = await db.promise().execute("SELECT u.uavatar avatar FROM users u WHERE u.uusername = :username;", { username: req.params.username });
+        const [rows, fields] = await db.promise().query("SELECT u.uavatar avatar FROM users u WHERE u.uusername = :username;", { username: req.params.username });
         if (rows.length === 0) {
             res.status(404).end();
         } else {
@@ -46,7 +46,7 @@ app.post("/password", async function (req, res) {
         if (typeof (req.body.password) === "string") {
             try {
                 const passwordhash = await bcrypt.hash(req.body.password, config.saltrounds);
-                await db.promise().execute("UPDATE users u SET u.upasswdhash = :passwordhash WHERE u.uid = UUID_TO_BIN(:useruuid);", { passwordhash: passwordhash, useruuid: req.token.uuid });
+                await db.promise().query("UPDATE users u SET u.upasswdhash = :passwordhash WHERE u.uid = UUID_TO_BIN(:useruuid);", { passwordhash: passwordhash, useruuid: req.token.uuid });
                 res.status(200).end();
             } catch (err) {
                 console.error(err);
@@ -62,7 +62,7 @@ app.post("/password", async function (req, res) {
 
 app.get("/:username", async function (req, res) {
     try {
-        const [rows, fields] = await db.promise().execute("SELECT * FROM users u WHERE u.uusername = :username;", { username: req.params.username });
+        const [rows, fields] = await db.promise().query("SELECT * FROM users u WHERE u.uusername = :username;", { username: req.params.username });
         if (rows.length === 0) {
             res.status(404).end();
         } else {

@@ -3,8 +3,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const db = require("./db.js");
-const config = require("./config.js");
+const db = require("../../db.js");
+const config = require("../../../config.js");
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.middle = async function (req, res, next) {
         const token = bearer[1];
         try {
             const decoded = jwt.verify(token, config.keys.public, { algorithms: ["ES384"] });
-            const [rows, fields] = await db.promise().execute("SELECT * FROM users u WHERE u.uid = UUID_TO_BIN(:useruuid);", { useruuid: decoded.uuid });
+            const [rows, fields] = await db.promise().query("SELECT * FROM users u WHERE u.uid = UUID_TO_BIN(:useruuid);", { useruuid: decoded.uuid });
             if (decoded.forauth === true && rows.length === 1) {
                 req.token = decoded;
             }
@@ -24,12 +24,12 @@ app.middle = async function (req, res, next) {
     next();
 };
 
-app.post("/gettoken", async function (req, res, next) {
+app.post("/gettoken", async function (req, res) {
     let uuid;
     let success = false;
     if (typeof (req.body.username) === "string" && typeof (req.body.password) === "string") {
         try {
-            const [rows, fields] = await db.promise().execute("SELECT u.upasswdhash hash, BIN_TO_UUID(u.uid) uuid FROM users u WHERE u.uusername = :username", { username: req.body.username });
+            const [rows, fields] = await db.promise().query("SELECT u.upasswdhash hash, BIN_TO_UUID(u.uid) uuid FROM users u WHERE u.uusername = :username", { username: req.body.username });
             if (rows.length === 1) {
                 success = await bcrypt.compare(req.body.password, rows[0].hash);
                 uuid = rows[0].uuid;
