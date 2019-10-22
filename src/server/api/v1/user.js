@@ -5,22 +5,36 @@ const bcrypt = require("bcrypt");
 
 const config = require("../../../config.js");
 const db = require("../../db.js");
+const sql = require("./sql.js");
 
 const app = express();
 
+// Enables range requests
+function send_data(req, res, data) {
+    res.setHeader("Accept-Ranges", "bytes");
+    const range = req.range(data.length);
+    if(range !== undefined && range.type === "bytes" && range.length === 1) /* Only accept one range */ {
+        res.status(206);
+        res.setHeader("Content-Range", range[0].start.toString() + "-" + range[0].end.toString() + "/" + data.length);
+        res.send(data.slice(range[0].start, range[0].end+1));
+    } else {
+        res.send(data);
+    }
+}
+
 app.get("/:username/avatar", async function (req, res) {
     try {
-        const [rows, fields] = await db.promise().query("SELECT u.uavatar avatar FROM users u WHERE u.uusername = :username;", { username: req.params.username });
+        const [rows, fields] = await db.promise().query(sql.getuseravatar, { username: req.params.username });
         if (rows.length === 0) {
             res.status(404).end();
         } else {
             res.status(200);
             if (rows[0].avatar === null) {
                 res.setHeader("Content-Type", "image/png");
-                res.sendFile(path.join(__dirname, "../public/avatarplaceholder.png"));
+                res.sendFile(path.join(__dirname, "../../../public/avatarplaceholder.png"));
             } else {
                 res.setHeader("Content-Type", "image/png");
-                res.send(rows[0].avatar);
+                send_data(req, res, rows[0].avatar);
             }
         }
     } catch (err) {
@@ -32,7 +46,7 @@ app.get("/:username/avatar", async function (req, res) {
 app.post("/avatar", async function (req, res) {
     if (req.token !== undefined) {
         if (req.files !== undefined) {
-
+            /* TODO */
         } else {
             res.status(400).end();
         }
@@ -46,7 +60,7 @@ app.post("/password", async function (req, res) {
         if (typeof (req.body.password) === "string") {
             try {
                 const passwordhash = await bcrypt.hash(req.body.password, config.saltrounds);
-                await db.promise().query("UPDATE users u SET u.upasswdhash = :passwordhash WHERE u.uid = UUID_TO_BIN(:useruuid);", { passwordhash: passwordhash, useruuid: req.token.uuid });
+                await db.promise().query(sql.updateuserpasswdhash, { passwordhash: passwordhash, useruuid: req.token.uuid });
                 res.status(200).end();
             } catch (err) {
                 console.error(err);
@@ -62,7 +76,7 @@ app.post("/password", async function (req, res) {
 
 app.get("/:username", async function (req, res) {
     try {
-        const [rows, fields] = await db.promise().query("SELECT * FROM users u WHERE u.uusername = :username;", { username: req.params.username });
+        const [rows, fields] = await db.promise().query(sql.getuser, { username: req.params.username });
         if (rows.length === 0) {
             res.status(404).end();
         } else {

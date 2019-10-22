@@ -1,18 +1,15 @@
 
 const express = require("express");
-const path = require("path");
-const fs = require("fs");
-const jwt = require("jsonwebtoken");
 
 const db = require("../../db.js");
-const config = require("../../../config.js");
+const sql = require("./sql.js");
 
 const app = express();
 
 app.get("/", async function (req, res) {
     if (req.token !== undefined) {
         try {
-            const [contentrows, contentfields] = await db.promise().query(sqlgetrootcontent, { useruuid: req.token.uuid });
+            const [contentrows, contentfields] = await db.promise().query(sql.getrootcontent, { useruuid: req.token.uuid });
             const object = {
                 owner: req.token.username,
                 content: contentrows.map(function (el) {
@@ -36,12 +33,12 @@ app.get("/", async function (req, res) {
 });
 
 app.get("/:uuid/", async function (req, res) {
-    const [accessrows, accessfields] = await db.promise().query(sqlgetaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
-    if (accessrows[0].accesslevel === null) {
-        res.status(404).end();
-    } else if (accessrows[0].accesslevel >= 1) {
-        try {
-            const [contentrows, contentfields] = await db.promise().query(sqlgetentryinfo, { entryuuid: req.params.uuid });
+    try {
+        const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
+        if (accessrows[0].accesslevel === null) {
+            res.status(404).end();
+        } else if (accessrows[0].accesslevel.includes("r")) {
+            const [contentrows, contentfields] = await db.promise().query(sql.getentryinfo, { entryuuid: req.params.uuid });
             let object = contentrows[0];
             object.isfolder = object.isfolder ? true : false;
             if (object.isfolder) {
@@ -59,48 +56,84 @@ app.get("/:uuid/", async function (req, res) {
             }
             res.status(200);
             res.json(object);
-        } catch (err) {
-            console.error(err);
-            res.status(500).end();
+        } else {
+            res.status(401).end();
         }
-    } else {
-        res.status(401).end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
     }
 });
 
 app.get("/:uuid/history", async function (req, res) {
-    const [accessrows, accessfields] = await db.promise().query(sqlgetaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
-    if (accessrows[0].accesslevel === null) {
-        res.status(404).end();
-    } else if (accessrows[0].accesslevel >= 1) {
-        try {
-            const [contentrows, contentfields] = await db.promise().query(sqlgetentryhistory, { entryuuid: req.params.uuid });
+    try {
+        const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
+        if (accessrows[0].accesslevel === null) {
+            res.status(404).end();
+        } else if (accessrows[0].accesslevel >= 1) {
+            const [contentrows, contentfields] = await db.promise().query(sql.getentryhistory, { entryuuid: req.params.uuid });
             res.status(200);
             res.json(contentrows);
-        } catch (err) {
-            console.error(err);
-            res.status(500).end();
+        } else {
+            res.status(401).end();
         }
-    } else {
-        res.status(401).end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
     }
 });
 
 app.get("/:uuid/share", async function (req, res) {
-
+    /* TODO */
 });
 
 app.post("/:uuid/share", async function(req, res) {
-
+    try {
+        const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
+        if (accessrows[0].accesslevel === null) {
+            res.status(404).end();
+        } else if (accessrows[0].accesslevel >= 2) {
+            if (req.body.accesslevel === "r" ||
+                req.body.accesslevel === "rw" ||
+                req.body.accesslevel === "rwd") {
+                if (typeof (req.body.useruuid) === "string") {
+                    const [sharerows, sharefields] = await db.promise().query(sql.getentryusershare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid });
+                    if (sharerows.length === 1) {
+                        await db.promise().query(sql.insertentryshare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid, accesslevel: req.body.accesslevel });
+                        res.status(200).end();
+                    } else {
+                        await db.promise().query(sql.updateshareaccesslevel, { shareuuid: sharerows[0].uuid, accesslevel: req.body.accesslevel });
+                        res.status(200).end();
+                    }
+                } else {
+                    const [sharerows, sharefields] = await db.promise().query(sql.getentryallshare, { entryuuid: req.params.uuid });
+                    if (sharerows.length === 1) {
+                        await db.promise().query(sql.insertentryshare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid, accesslevel: req.body.accesslevel });
+                        res.status(200).end();
+                    } else {
+                        await db.promise().query(sql.updateshareaccesslevel, { shareuuid: sharerows[0].uuid, accesslevel: req.body.accesslevel });
+                        res.status(200).end();
+                    }
+                }
+            } else {
+                res.status(400).end();
+            }
+        } else {
+            res.status(401).end();
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
+    }
 });
 
 app.delete("/share/:uuid", async function (req, res) {
-
+    /* TODO */
 });
 
 // update / rename
 app.post("/:uuid", function (req, res) {
-
+    /* TODO */
 });
 
 // new
@@ -110,11 +143,8 @@ app.put("/", async function (req, res) {
             if (req.files !== undefined) {
                 // TODO: Add file upload
             } else if (typeof (req.body.foldername) === "string") {
-                const [uuidrow, uuidfields] = await db.promise().query("SELECT UUID() uuid;");
-                const sql1 = "INSERT INTO entrys(eid, ename, eparentid, eownerid, etype) VALUES (UUID_TO_BIN(:uuid), :name, NULL, UUID_TO_BIN(:useruuid), 'folder')";
-                await db.promise().query(sql1, { uuid: uuidrow[0].uuid, name: req.body.foldername, useruuid: req.token.uuid })
-                const sql2 = "INSERT INTO history(hid, hentryid, huserid, hdatetime, hoperation) VALUES (UUID_TO_BIN(UUID()), UUID_TO_BIN(:uuid), UUID_TO_BIN(:useruuid), NOW(), 'create')";
-                await db.promise().query(sql2, { uuid: uuidrow[0].uuid, name: req.body.foldername, useruuid: req.token.uuid })
+                const [uuidrow, uuidfields] = await db.promise().query(sql.getuuid);
+                await db.promise().query(sql.insertfolderentry, { uuid: uuidrow[0].uuid, name: req.body.foldername, useruuid: req.token.uuid, parentuuid: null });
                 res.status(200).end();
             } else if (typeof (req.body.shareentryuuid) === "string") {
                 const [sharerows, sharefields] = await db.promise().query(sqlgetbestentryshare, { useruuid: req.token.uuid, entryuuid: req.body.shareentryuuid });
@@ -138,11 +168,11 @@ app.put("/", async function (req, res) {
 });
 
 app.put("/:uuid", async function (req, res) {
-
+    /* TODO */
 });
 
 app.delete("/:uuid", async function (req, res) {
-
+    /* TODO */
 });
 
 module.exports = app;

@@ -28,8 +28,7 @@ app.use(function (req, res) {
 });
 app.use(function (err, req, res, next) {
     console.error(err);
-    res.status(400);
-    res.sendFile(path.join(__dirname, "../public/400.html"));
+    res.status(500).end();
 });
 
 http.createServer(app).listen(config.ports.http);

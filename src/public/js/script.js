@@ -1,6 +1,10 @@
 
 let loginusername = null;
 
+window.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+});
+
 window.addEventListener("load", async function () {
     const newbutton = document.getElementById("new");
 
@@ -119,7 +123,7 @@ function login_user(username) {
     const user = document.getElementById("user");
     const node = document.createElement("img");
     node.id = "useravatar";
-    node.src = "/avatar/" + encodeURI(username);
+    node.src = "/api/v1/user/" + encodeURI(username) + "/avatar";
     user.appendChild(node);
     const url = new URL(window.location.href);
     const query_string = url.search;
@@ -154,7 +158,7 @@ async function load_from_drive(path) {
                 absolutepath:"/test/hello/gg.txt",
                 name:"gg.txt",
                 isfolder:false,
-                lastmodifieddatetime:"2019-04-03 12:03",
+                lastmodifieddatetime:"2019-10-20T12:02:48.000Z",
                 lastmodifieduser:"MrMobi",
                 owner:"roqqnggehhppd",
                 filesize:17235
@@ -181,6 +185,7 @@ async function load_from_drive(path) {
 }
 
 async function attemt_login(username, password) {
+    await new Promise((promise) => setTimeout(promise, 1000));
     if(username === null || password === null)
         return false;
     return true;
@@ -314,7 +319,6 @@ function generate_entry(parent, data) {
                 node.classList.remove("entryactive");
             });
         }
-        event.preventDefault();
     });
     parent.appendChild(node);
 }
