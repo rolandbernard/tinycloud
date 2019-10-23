@@ -4,7 +4,6 @@ WITH RECURSIVE resolved_entrys (oreyuuid, eyuuid, sheyuuid) AS (
             LEFT JOIN sharelinks AS sl ON (ey.eyuuid = sl.eyuuid)
             LEFT JOIN shares AS sh ON (sl.shuuid = sh.shuuid)
     	WHERE ey.eyparentuuid = UUID_TO_BIN(:parentuuid)
-          AND ey.uruuid = UUID_TO_BIN(:useruuid)
     UNION
     SELECT re.oreyuuid, ey.eyuuid, sh.eyuuid
         FROM entrys AS ey

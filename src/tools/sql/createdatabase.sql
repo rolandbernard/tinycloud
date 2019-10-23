@@ -44,7 +44,7 @@ CREATE TABLE files (
 CREATE TABLE shares (
     shuuid BINARY(16) NOT NULL PRIMARY KEY,
     shaccesslevel ENUM('r','rw','rwd') NOT NULL,
-    uruuid BINARY(16) NOT NULL,
+    uruuid BINARY(16),
     eyuuid BINARY(16) NOT NULL,
     FOREIGN KEY (uruuid)
         REFERENCES users(uruuid)

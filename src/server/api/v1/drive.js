@@ -44,7 +44,7 @@ app.get("/:uuid/", async function (req, res) {
             if (object.isfolder) {
                 delete object.filesize;
                 delete object.contenttype;
-                const [contentrows, contentfields] = await db.promise().query(sqlgetfoldercontent, { parentuuid: req.params.uuid });
+                const [contentrows, contentfields] = await db.promise().query(sql.getfoldercontent, { parentuuid: req.params.uuid });
                 object.content = contentrows.map(function (el) {
                     el.isfolder = el.isfolder ? true : false;
                     if (el.isfolder) {
@@ -92,26 +92,26 @@ app.post("/:uuid/share", async function(req, res) {
         const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
         if (accessrows[0].accesslevel === null) {
             res.status(404).end();
-        } else if (accessrows[0].accesslevel >= 2) {
+        } else if (accessrows[0].accesslevel.includes("w")) {
             if (req.body.accesslevel === "r" ||
                 req.body.accesslevel === "rw" ||
                 req.body.accesslevel === "rwd") {
                 if (typeof (req.body.useruuid) === "string") {
                     const [sharerows, sharefields] = await db.promise().query(sql.getentryusershare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid });
                     if (sharerows.length === 1) {
-                        await db.promise().query(sql.insertentryshare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid, accesslevel: req.body.accesslevel });
+                        await db.promise().query(sql.updateshareaccesslevel, { shareuuid: sharerows[0].uuid, accesslevel: req.body.accesslevel });
                         res.status(200).end();
                     } else {
-                        await db.promise().query(sql.updateshareaccesslevel, { shareuuid: sharerows[0].uuid, accesslevel: req.body.accesslevel });
+                        await db.promise().query(sql.insertentryshare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid, accesslevel: req.body.accesslevel });
                         res.status(200).end();
                     }
                 } else {
                     const [sharerows, sharefields] = await db.promise().query(sql.getentryallshare, { entryuuid: req.params.uuid });
                     if (sharerows.length === 1) {
-                        await db.promise().query(sql.insertentryshare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid, accesslevel: req.body.accesslevel });
+                        await db.promise().query(sql.updateshareaccesslevel, { shareuuid: sharerows[0].uuid, accesslevel: req.body.accesslevel });
                         res.status(200).end();
                     } else {
-                        await db.promise().query(sql.updateshareaccesslevel, { shareuuid: sharerows[0].uuid, accesslevel: req.body.accesslevel });
+                        await db.promise().query(sql.insertentryshare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid, accesslevel: req.body.accesslevel });
                         res.status(200).end();
                     }
                 }
@@ -143,14 +143,14 @@ app.put("/", async function (req, res) {
             if (req.files !== undefined) {
                 // TODO: Add file upload
             } else if (typeof (req.body.foldername) === "string") {
-                const [uuidrow, uuidfields] = await db.promise().query(sql.getuuid);
-                await db.promise().query(sql.insertfolderentry, { uuid: uuidrow[0].uuid, name: req.body.foldername, useruuid: req.token.uuid, parentuuid: null });
+                const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
+                await db.promise().query(sql.insertfolderentry, { uuid: uuidrows[0].uuid, name: req.body.foldername, useruuid: req.token.uuid, parentuuid: null });
                 res.status(200).end();
             } else if (typeof (req.body.shareentryuuid) === "string") {
-                const [sharerows, sharefields] = await db.promise().query(sqlgetbestentryshare, { useruuid: req.token.uuid, entryuuid: req.body.shareentryuuid });
+                const [sharerows, sharefields] = await db.promise().query(sql.getbestentryshare, { useruuid: req.token.uuid, entryuuid: req.body.shareentryuuid });
                 if (sharerows.length >= 1) {
-                    const sql = "INSERT INTO sharepoints(spid, spmountedbyid, spparentid, spshareid) VALUES (UUID_TO_BIN(UUID()), UUID_TO_BIN(:useruuid), NULL, UUID_TO_BIN(:shareuuid))";
-                    await db.promise().query(sql, { shareuuid: sharerows[0].uuid, useruuid: req.token.uuid })
+                    const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
+                    await db.promise().query(sql.insertsharelinkentry, { uuid: uuidrows[0].uuid, parentuuid: null, shareuuid: sharerows[0].uuid, useruuid: req.token.uuid });
                     res.status(200).end();
                 } else {
                     res.status(401).end();
