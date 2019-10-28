@@ -21,6 +21,7 @@ app.get("/", async function (req, res) {
                     el.isshare = el.isshare ? true : false;
                     if (!el.isshare) {
                         delete el.shareuuid;
+                        delete el.directaccesslevel;
                     }
                     return el;
                 })
@@ -61,6 +62,7 @@ app.get("/:uuid/", async function (req, res) {
                         el.isshare = el.isshare ? true : false;
                         if (!el.isshare) {
                             delete el.shareuuid;
+                            delete el.directaccesslevel;
                         }
                         return el;
                     })
@@ -68,6 +70,7 @@ app.get("/:uuid/", async function (req, res) {
                 object.isshare = object.isshare ? true : false;
                 if (!object.isshare) {
                     delete object.shareuuid;
+                    delete object.directaccesslevel;
                 }
                 res.status(200);
                 res.json(object);
