@@ -33,10 +33,10 @@ WITH RECURSIVE resolved_entrys (oreyuuid, eyuuid, sheyuuid) AS (
 SELECT 	BIN_TO_UUID(ey.eyuuid) AS uuid,
 		NVL(fd.fdname, fl.flname) AS name,
         (fd.eyuuid IS NOT NULL) AS isfolder,
-        NVL(owur.uruname, 'Guest') AS owner,
-        crhr.hrdatetime AS createdat,
-        NVL(lmur.uruname, 'Guest') AS lastmodifieduser,
-        lmhr.hrdatetime AS lastmodifiedat,
+        NVL(owur.uruname, 'guest') AS owner,
+        crhr.hrdatetime AS createddatetime,
+        NVL(lmur.uruname, 'guest') AS lastmodifieduser,
+        lmhr.hrdatetime AS lastmodifiedatetime,
         fl.flcontenttype AS contenttype,
         fl.flsize AS filesize,
         (SELECT CONCAT(
@@ -45,15 +45,15 @@ SELECT 	BIN_TO_UUID(ey.eyuuid) AS uuid,
                     IF(MAX(IF(sh.shaccesslevel LIKE '%d%' OR eya.uruuid = UUID_TO_BIN(:useruuid), 1, 0)) = 1, 'd', '')
                 )
             FROM entrys AS eya
-            JOIN resolved_parrent_entrys AS rea ON (eya.eyuuid = rea.eyuuid)
-            LEFT JOIN shares AS sh
+                JOIN resolved_parrent_entrys AS rea ON (eya.eyuuid = rea.eyuuid)
+                LEFT JOIN shares AS sh
                     ON (eya.eyuuid = sh.eyuuid
-                    AND(sh.uruuid = UUID_TO_BIN(:entryuuid)
+                    AND(sh.uruuid = UUID_TO_BIN(:useruuid)
                     OR sh.uruuid IS NULL))
             WHERE rea.sheyuuid IS NULL
             AND re.oreyuuid = rea.oreyuuid) AS accesslevel,
         (re.oreyuuid != re.eyuuid) AS isshare,
-        BIN_TO_UUID(re.oreyuuid) AS shareuuid,
+        BIN_TO_UUID(re.oreyuuid) AS shareuuid
     FROM entrys AS ey
         JOIN resolved_entrys AS re ON (ey.eyuuid = re.eyuuid)
         LEFT JOIN files AS fl ON (ey.eyuuid = fl.eyuuid)

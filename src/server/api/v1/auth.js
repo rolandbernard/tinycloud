@@ -61,7 +61,7 @@ app.post("/gettoken", async function (req, res) {
 
 app.post("/download", function (req, res) {
     if (req.token !== undefined) {
-        if (typeof (req.body.downloaduuid) === "string") {
+        if (typeof (req.body.downloaduuid) === "string" && req.body.downloaduuid.length === 36) {
             const object = {
                 uuid: req.token.uuid,
                 username: req.token.username,
@@ -71,14 +71,23 @@ app.post("/download", function (req, res) {
                 const token = jwt.sign(object, config.keys.private, { algorithm: "ES384", expiresIn: 60 * 60 * 24 });
                 res.status(200);
                 res.json({ token: token });
-            } catch (err) {
-                res.status(401).end();
-            }
+            } catch (err) { }
         } else {
             res.status(400).end();
         }
     } else {
-        res.status(401).end();
+        if (typeof (req.body.downloaduuid) === "string" && req.body.downloaduuid.length === 36) {
+            const object = {
+                downloaduuid: req.body.downloaduuid
+            };
+            try {
+                const token = jwt.sign(object, config.keys.private, { algorithm: "ES384", expiresIn: 60 * 60 * 24 });
+                res.status(200);
+                res.json({ token: token });
+            } catch (err) { }
+        } else {
+            res.status(400).end();
+        }
     }
 });
 

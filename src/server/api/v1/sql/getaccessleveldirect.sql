@@ -17,6 +17,6 @@ SELECT CONCAT(
         JOIN resolved_parrent_entrys AS re ON (ey.eyuuid = re.eyuuid)
         LEFT JOIN shares AS sh
             ON (ey.eyuuid = sh.eyuuid
-            AND(sh.uruuid = UUID_TO_BIN(:entryuuid)
+            AND(sh.uruuid = UUID_TO_BIN(:useruuid)
              OR sh.uruuid IS NULL))
     WHERE re.sheyuuid IS NULL;

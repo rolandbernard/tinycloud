@@ -18,6 +18,7 @@ app.get("/", async function (req, res) {
                         delete el.filesize;
                         delete el.contenttype;
                     }
+                    el.isshare = el.isshare ? true : false;
                     if (!el.isshare) {
                         delete el.shareuuid;
                     }
@@ -44,24 +45,29 @@ app.get("/:uuid/", async function (req, res) {
             if (accessrows[0].accesslevel === null) {
                 res.status(404).end();
             } else if (accessrows[0].accesslevel.includes("r")) {
-                const [contentrows, contentfields] = await db.promise().query(sql.getentryinfo, { entryuuid: req.params.uuid });
-                let object = contentrows[0];
+                const [inforows, infofields] = await db.promise().query(sql.getentryinfo, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
+                let object = inforows[0];
                 object.isfolder = object.isfolder ? true : false;
                 if (object.isfolder) {
                     delete object.filesize;
                     delete object.contenttype;
-                    const [contentrows, contentfields] = await db.promise().query(sql.getfoldercontent, { useruuid: (req.token !== undefined ? req.token.uuid : null), parentuuid: req.params.uuid });
+                    const [contentrows, contentfields] = await db.promise().query(sql.getfoldercontent, { useruuid: (req.token !== undefined ? req.token.uuid : null), parentuuid: inforows[0].uuid });
                     object.content = contentrows.map(function (el) {
                         el.isfolder = el.isfolder ? true : false;
                         if (el.isfolder) {
                             delete el.filesize;
                             delete el.contenttype;
                         }
+                        el.isshare = el.isshare ? true : false;
                         if (!el.isshare) {
                             delete el.shareuuid;
                         }
                         return el;
                     })
+                }
+                object.isshare = object.isshare ? true : false;
+                if (!object.isshare) {
+                    delete object.shareuuid;
                 }
                 res.status(200);
                 res.json(object);
@@ -98,9 +104,24 @@ app.get("/:uuid/history", async function (req, res) {
 });
 
 app.get("/:uuid/share", async function (req, res) {
-    if(req.params.uuid.length != 36) {
+    if (req.params.uuid.length != 36) {
         res.status(400).end();
     } else {
+        try {
+            const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
+            if (accessrows[0].accesslevel === null) {
+                res.status(404).end();
+            } else if (accessrows[0].accesslevel.includes("r")) {
+                const [contentrows, contentfields] = await db.promise().query(sql.getentryshares, { entryuuid: req.params.uuid });
+                res.status(200);
+                res.json(contentrows);
+            } else {
+                res.status(401).end();
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).end();
+        }
     }
 });
 
@@ -149,9 +170,28 @@ app.post("/:uuid/share", async function(req, res) {
 });
 
 app.delete("/share/:uuid", async function (req, res) {
-    if(req.params.uuid.length != 36) {
+    if (req.params.uuid.length != 36) {
         res.status(400).end();
     } else {
+        try {
+            const [sharerows, sharefields] = await db.promise().query(sql.getshareentry, { shareuuid: req.params.uuid });
+            if (sharerows.length === 1) {
+                const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: sharerows[0].uuid });
+                if (accessrows[0].accesslevel === null) {
+                    res.status(404).end();
+                } else if (accessrows[0].accesslevel.includes("w")) {
+                    await db.promise().query(sql.deleteshare, { shareuuid: req.params.uuid });
+                    res.status(200).end();
+                } else {
+                    res.status(401).end();
+                }
+            } else {
+                res.status(404).end();
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).end();
+        }
     }
 });
 
@@ -168,7 +208,9 @@ app.put("/", async function (req, res) {
     if (req.token !== undefined) {
         try {
             if (req.files !== undefined) {
-                // TODO: Add file upload
+                const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
+                await db.promise().query(sql.insertfileentry, { uuid: uuidrows[0].uuid, name: req.files.file.name, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: req.token.uuid, parentuuid: null });
+                res.status(200).end();
             } else if (typeof (req.body.foldername) === "string") {
                 const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                 await db.promise().query(sql.insertfolderentry, { uuid: uuidrows[0].uuid, name: req.body.foldername, useruuid: req.token.uuid, parentuuid: null });
@@ -200,29 +242,36 @@ app.put("/:uuid", async function (req, res) {
     } else {
         try {
             const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
-            if (accessrows.length === 0) {
-                res.status(404).end();
-            } else if (accessrows[0].accesslevel.includes("w")) {
-                if (req.files !== undefined) {
-                    // TODO: Add file upload
-                } else if (typeof (req.body.foldername) === "string") {
-                    const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
-                    await db.promise().query(sql.insertfolderentry, { uuid: uuidrows[0].uuid, name: req.body.foldername, useruuid: (req.token !== undefined ? req.token.uuid : null), parentuuid: req.params.uuid });
-                    res.status(200).end();
-                } else if (typeof (req.body.shareentryuuid) === "string") {
-                    const [sharerows, sharefields] = await db.promise().query(sql.getbestentryshare, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.body.shareentryuuid });
-                    if (sharerows.length >= 1) {
+            const [parentrows, parentfields] = await db.promise().query(sql.getentryinfo, { entryuuid: req.params.uuid });
+            if (parentrows.length === 1 && parentrows[0].isfolder) {
+                if (accessrows.length === 0) {
+                    res.status(404).end();
+                } else if (accessrows[0].accesslevel.includes("w")) {
+                    if (req.files !== undefined) {
                         const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
-                        await db.promise().query(sql.insertsharelinkentry, { uuid: uuidrows[0].uuid, parentuuid: req.params.uuid, shareuuid: sharerows[0].uuid, useruuid: (req.token !== undefined ? req.token.uuid : null) });
+                        await db.promise().query(sql.insertfileentry, { uuid: uuidrows[0].uuid, name: req.files.file.name, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: req.token.uuid, parentuuid: parentrows[0].uuid });
                         res.status(200).end();
+                    } else if (typeof (req.body.foldername) === "string") {
+                        const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
+                        await db.promise().query(sql.insertfolderentry, { uuid: uuidrows[0].uuid, name: req.body.foldername, useruuid: (req.token !== undefined ? req.token.uuid : null), parentuuid: parentrows[0].uuid });
+                        res.status(200).end();
+                    } else if (typeof (req.body.shareentryuuid) === "string") {
+                        const [sharerows, sharefields] = await db.promise().query(sql.getbestentryshare, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.body.shareentryuuid });
+                        if (sharerows.length >= 1) {
+                            const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
+                            await db.promise().query(sql.insertsharelinkentry, { uuid: uuidrows[0].uuid, parentuuid: parentrows[0].uuid, shareuuid: sharerows[0].uuid, useruuid: (req.token !== undefined ? req.token.uuid : null) });
+                            res.status(200).end();
+                        } else {
+                            res.status(401).end();
+                        }
                     } else {
-                        res.status(401).end();
+                        res.status(400).end();
                     }
                 } else {
-                    res.status(400).end();
+                    res.status(401).end();
                 }
             } else {
-                res.status(401).end();
+                res.status(400).end();
             }
         } catch (err) {
             console.error(err);
@@ -235,6 +284,20 @@ app.delete("/:uuid", async function (req, res) {
     if(req.params.uuid.length != 36) {
         res.status(400).end();
     } else {
+        try {
+            const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
+            if (accessrows[0].accesslevel === null) {
+                res.status(404).end();
+            } else if (accessrows[0].accesslevel.includes("d")) {
+                await db.promise().query(sql.deleteentry, { entryuuid: req.params.uuid });
+                res.status(200).end();
+            } else {
+                res.status(401).end();
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).end();
+        }
     }
 });
 

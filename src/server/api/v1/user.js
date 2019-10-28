@@ -2,6 +2,7 @@
 const path = require("path");
 const express = require("express");
 const bcrypt = require("bcrypt");
+const sharp = require("sharp");
 
 const config = require("../../../config.js");
 const db = require("../../db.js");
@@ -9,7 +10,6 @@ const sql = require("./sql.js");
 
 const app = express();
 
-// Enables range requests
 function send_data(req, res, data) {
     res.setHeader("Accept-Ranges", "bytes");
     const range = req.range(data.length);
@@ -46,7 +46,18 @@ app.get("/:username/avatar", async function (req, res) {
 app.post("/avatar", async function (req, res) {
     if (req.token !== undefined) {
         if (req.files !== undefined) {
-            /* TODO */
+            try {
+                const avatar = await sharp(req.files.file.data).resize(128).png().toBuffer();
+                try {
+                    await db.promise().query(sql.updateuseravatar, { avatar: avatar, useruuid: req.token.uuid });
+                    res.status(200).end();
+                } catch (err) {
+                    console.error(err);
+                    res.status(500).end();
+                }
+            } catch (err) {
+                res.status(400).end();
+            }
         } else {
             res.status(400).end();
         }

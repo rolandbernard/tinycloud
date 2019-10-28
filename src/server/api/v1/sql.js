@@ -12,6 +12,7 @@ module.exports = {
     getentryinfo: fs.readFileSync(path.join(__dirname, "./sql/getentryinfo.sql"), "utf8"),
     getentryshares: fs.readFileSync(path.join(__dirname, "./sql/getentryshares.sql"), "utf8"),
     getentryusershare: fs.readFileSync(path.join(__dirname, "./sql/getentryusershare.sql"), "utf8"),
+    getshareentry: fs.readFileSync(path.join(__dirname, "./sql/getshareentry.sql"), "utf8"),
     getentryallshare: fs.readFileSync(path.join(__dirname, "./sql/getentryallshare.sql"), "utf8"),
     getfiledate: fs.readFileSync(path.join(__dirname, "./sql/getfiledata.sql"), "utf8"),
     getfoldercontent: fs.readFileSync(path.join(__dirname, "./sql/getfoldercontent.sql"), "utf8"),
