@@ -4,22 +4,54 @@ WITH RECURSIVE resolved_entrys (oreyuuid, eyuuid, sheyuuid) AS (
             LEFT JOIN sharelinks AS sl ON (ey.eyuuid = sl.eyuuid)
             LEFT JOIN shares AS sh ON (sl.shuuid = sh.shuuid)
     	WHERE ey.eyuuid = UUID_TO_BIN(:entryuuid)
+          AND(sh.uruuid = UUID_TO_BIN(:useruuid) OR sh.uruuid IS NULL)
     UNION
     SELECT re.oreyuuid, ey.eyuuid, sh.eyuuid
         FROM entrys AS ey
             JOIN resolved_entrys AS re ON (ey.eyuuid = re.sheyuuid)
             LEFT JOIN sharelinks AS sl ON (ey.eyuuid = sl.eyuuid)
             LEFT JOIN shares AS sh ON (sl.shuuid = sh.shuuid)
+), resolved_parrent_entrys (oreyuuid, eyuuid, sheyuuid, eyparentuuid) AS (
+    SELECT ey.eyuuid, ey.eyuuid, sh.eyuuid, ey.eyparentuuid
+        FROM entrys AS ey
+            LEFT JOIN sharelinks AS sl ON (ey.eyuuid = sl.eyuuid)
+            LEFT JOIN shares AS sh ON (sl.shuuid = sh.shuuid)
+    	WHERE ey.eyuuid = UUID_TO_BIN(:entryuuid)
+          AND(sh.uruuid = UUID_TO_BIN(:useruuid) OR sh.uruuid IS NULL)
+    UNION
+    SELECT re.oreyuuid, ey.eyuuid, sh.eyuuid, ey.eyparentuuid
+        FROM entrys AS ey
+            JOIN resolved_parrent_entrys AS re
+                ON (ey.eyuuid = re.sheyuuid
+                OR (ey.eyuuid = re.eyparentuuid
+                AND re.sheyuuid IS NULL))
+            LEFT JOIN sharelinks AS sl ON (ey.eyuuid = sl.eyuuid)
+            LEFT JOIN shares AS sh ON (sl.shuuid = sh.shuuid)
 )
-SELECT 	BIN_TO_UUID(re.oreyuuid) AS uuid,
+SELECT 	BIN_TO_UUID(ey.eyuuid) AS uuid,
 		NVL(fd.fdname, fl.flname) AS name,
         (fd.eyuuid IS NOT NULL) AS isfolder,
-        owur.uruname AS owner,
+        NVL(owur.uruname, 'Guest') AS owner,
         crhr.hrdatetime AS createdat,
-        lmur.uruname AS lastmodifieduser,
+        NVL(lmur.uruname, 'Guest') AS lastmodifieduser,
         lmhr.hrdatetime AS lastmodifiedat,
         fl.flcontenttype AS contenttype,
-        fl.flsize AS filesize
+        fl.flsize AS filesize,
+        (SELECT CONCAT(
+                    IF(MAX(IF(sh.shaccesslevel LIKE '%r%' OR eya.uruuid = UUID_TO_BIN(:useruuid), 1, 0)) = 1, 'r', ''),
+                    IF(MAX(IF(sh.shaccesslevel LIKE '%w%' OR eya.uruuid = UUID_TO_BIN(:useruuid), 1, 0)) = 1, 'w', ''),
+                    IF(MAX(IF(sh.shaccesslevel LIKE '%d%' OR eya.uruuid = UUID_TO_BIN(:useruuid), 1, 0)) = 1, 'd', '')
+                )
+            FROM entrys AS eya
+            JOIN resolved_parrent_entrys AS rea ON (eya.eyuuid = rea.eyuuid)
+            LEFT JOIN shares AS sh
+                    ON (eya.eyuuid = sh.eyuuid
+                    AND(sh.uruuid = UUID_TO_BIN(:entryuuid)
+                    OR sh.uruuid IS NULL))
+            WHERE rea.sheyuuid IS NULL
+            AND re.oreyuuid = rea.oreyuuid) AS accesslevel,
+        (re.oreyuuid != re.eyuuid) AS isshare,
+        BIN_TO_UUID(re.oreyuuid) AS shareuuid
     FROM entrys AS ey
         JOIN resolved_entrys AS re ON (ey.eyuuid = re.eyuuid)
         LEFT JOIN files AS fl ON (ey.eyuuid = fl.eyuuid)

@@ -106,5 +106,3 @@ RETURN
             SUBSTR(_uuid, 25)
         )
     );
-
-

@@ -1,4 +1,4 @@
-SELECT sh.shuuid AS uuid, sh.shaccesslevel AS accesslevel
+SELECT BIN_TO_UUID(sh.shuuid) AS uuid, sh.shaccesslevel AS accesslevel
     FROM entrys AS ey
         JOIN shares AS sh ON (ey.eyuuid = sh.eyuuid)
     WHERE ey.eyuuid = UUID_TO_BIN(:entryuuid)

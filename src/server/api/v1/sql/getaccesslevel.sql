@@ -4,6 +4,7 @@ WITH RECURSIVE resolved_parrent_entrys (oreyuuid, eyuuid, sheyuuid, eyparentuuid
             LEFT JOIN sharelinks AS sl ON (ey.eyuuid = sl.eyuuid)
             LEFT JOIN shares AS sh ON (sl.shuuid = sh.shuuid)
         WHERE ey.eyuuid = UUID_TO_BIN(:entryuuid)
+          AND(sh.uruuid = UUID_TO_BIN(:useruuid) OR sh.uruuid IS NULL)
     UNION
     SELECT re.oreyuuid, ey.eyuuid, sh.eyuuid, ey.eyparentuuid
         FROM entrys AS ey
@@ -21,5 +22,8 @@ SELECT CONCAT(
        ) AS accesslevel
     FROM entrys AS ey
         JOIN resolved_parrent_entrys AS re ON (ey.eyuuid = re.eyuuid)
-        LEFT JOIN shares AS sh ON (ey.eyuuid = sh.eyuuid)
+        LEFT JOIN shares AS sh
+            ON (ey.eyuuid = sh.eyuuid
+            AND(sh.uruuid = UUID_TO_BIN(:entryuuid)
+             OR sh.uruuid IS NULL))
     WHERE re.sheyuuid IS NULL;
