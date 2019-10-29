@@ -42,7 +42,7 @@ SELECT 	BIN_TO_UUID(ey.eyuuid) AS uuid,
         NVL(owur.uruname, 'guest') AS owner,
         crhr.hrdatetime AS createddatetime,
         NVL(lmur.uruname, 'guest') AS lastmodifieduser,
-        lmhr.hrdatetime AS lastmodifiedatetime,
+        lmhr.hrdatetime AS lastmodifieddatetime,
         fl.flcontenttype AS contenttype,
         fl.flsize AS filesize,
         (SELECT CONCAT(
