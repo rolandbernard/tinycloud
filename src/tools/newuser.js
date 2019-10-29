@@ -64,6 +64,11 @@ const sql = {
         }
     });
 
+    if(username.match(/[^a-zA-Z0-9-._~]/)) {
+        console.error("The username should only include letters, numbers or one of these special characters: '-', '.', '_', '~'");
+        process.exit();
+    }
+
     if (password === null) {
         password = "";
     }
