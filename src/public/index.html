@@ -6,12 +6,18 @@
         <meta name="keywords" content="">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/static/logo/logoblue.svg">
         <link rel="stylesheet" href="/static/css/html5reset.css">
         <link rel="stylesheet" href="/static/css/fonts.css">
-        <link rel="stylesheet" href="/static/css/styles.css">
+        <link rel="stylesheet" href="/static/css/misc.css">
+        <link rel="stylesheet" href="/static/css/explorer.css">
+        <link rel="stylesheet" href="/static/css/login.css">
+        <link rel="stylesheet" href="/static/css/menus.css">
         <link rel="stylesheet" href="/static/css/loader.css">
-        <link rel="icon" href="/static/logo/logoblue.svg">
-        <script src="/static/js/script.js"></script>
+        <script src="/static/js/drive.js"></script>
+        <script src="/static/js/display.js"></script>
+        <script src="/static/js/auth.js"></script>
+        <script src="/static/js/misc.js"></script>
     </head>
     <body>
         <div id="page">
@@ -36,7 +42,7 @@
                 <form name="login" id="loginform">
                     <div id="signinheader">Sign in</div>
                     <div class="infotext">Username</div>
-                    <input id="username" name="username" type="text"  autocomplete="off"/>
+                    <input id="username" name="username" type="text" autocomplete="off"/>
                     <div class="infotext">Password</div>
                     <input id="password" name="password" type="password"/>
                     <div id="infotexterror" class="infotext"></div>
@@ -55,7 +61,7 @@
         </div>
         <div id="newmenu" style="display: none;">
             <div id="newfolder" class="menupoint">
-                <img class="menusvg" src="/static/icon/newfolder.svg"/><div class="menutext">Folder</div>
+                <img class="menusvg" src="/static/icon/newfolder.svg"/><div class="menutext">New folder</div>
             </div>
             <div id="uploadfile" class="menupoint">
                 <img class="menusvg" src="/static/icon/upload.svg"/><div class="menutext">Upload file</div>
@@ -82,6 +88,9 @@
             </div>
             <div id="delete" class="menupoint">
                 <img class="menusvg" src="/static/icon/delete.svg"/><div class="menutext">Delete</div>
+            </div>
+            <div id="remove" class="menupoint">
+                <img class="menusvg" src="/static/icon/clear.svg"/><div class="menutext">Remove</div>
             </div>
         </div>
         <div id="usermenu" style="display: none;">

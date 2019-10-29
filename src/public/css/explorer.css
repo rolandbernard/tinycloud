@@ -1,0 +1,226 @@
+#explorer {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
+}
+
+#path {
+    margin: 0.5em 0.5em 2em 0.5em;
+    border-bottom: 1px solid lightgrey;
+    padding: 0.2em;
+    overflow-x: auto;
+    white-space: nowrap;
+    flex: 0 0 auto;
+    height: 2em;
+}
+
+.pathseperator {
+    display: inline-block;
+    width: 0;
+    height: 1em;
+    border: 1px solid lightgrey;
+    vertical-align: middle;
+}
+
+#pathroot {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+.pathelement {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.9em;
+    color: black;
+    padding: 0.4em 0.75em 0.4em 0.75em;
+    border-radius: 0.2em;
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.pathelement:hover {
+    background: #eeeeee;
+    cursor: pointer;
+}
+
+.dirview {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+}
+
+#rootdirectory {
+    overflow-y: scroll; 
+    flex: 1 1 auto;
+    scrollbar-width: none;
+}
+
+#rootdirectory::-webkit-scrollbar {
+  width: 0;
+}
+
+.entry, .dirviewheader {
+    flex: 0 1 auto;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.dirviewheader {
+    padding: 0.5em 0 0.5em 1em;
+    flex: 0 0 auto;
+}
+
+.entry {
+    padding: 0.5em 0 0.5em 0;
+    border-top: 1px solid lightgrey;
+    /* border-top: 1px solid lightgray;
+    margin-top: -1px; */
+}
+
+.entry:hover {
+    background: #eeeeee;
+    cursor: pointer;
+}
+
+.entryactive {
+    background: #bee9f7;
+}
+
+.entryactive:hover {
+    background: #bee9f7;
+}
+
+.dirviewcell {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: visible; /* TOFIX */
+    margin: auto;
+}
+
+.entryiconname {
+    width: 100%;
+    height: 1.2em;
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.entryexpand {
+    flex: 0 0 auto;
+    width: 1.5em;
+}
+
+.entryexpandsvg {
+    width: 1.75em;
+    height: 1.75em;
+    margin-top: -0.3em;
+}
+
+.entryicon {
+    height: 2em;
+    width: 2em;
+    flex: 0 0 auto;
+    margin-top: -0.4em;
+}
+
+.entryname {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.85em;
+    padding-left: 0.75em;
+    flex: 1 1 auto;
+}
+
+.entrydetails {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    color: #777777;
+    width: 20vw;
+    max-width: 20em;
+    flex: 0 0 auto;
+    overflow: hidden;
+    height: 1.25em;
+}
+
+.entryfilesize {
+    width: 15vw;
+}
+
+.entryowner {
+    min-width: 5em;
+}
+
+.entrylastmodified {
+    min-width: 10em;
+}
+
+.dirviewheadercell {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    color: #777777;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#dirviewname {
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+#dirviewowner, #dirviewlastmodified, #dirviewfilesize {
+    width: 20vw;
+    max-width: 20em;
+    flex: 0 0 auto;
+}
+
+#dirviewfilesize {
+    width: 15vw;
+}
+
+#dirviewowner {
+    min-width: 5em;
+}
+
+#dirviewlastmodified {
+    min-width: 10em;
+}
+
+.subdirectory {
+    margin-left: 1em;
+    /* box-shadow: -3px 0 0 0 lightgrey; */
+    min-height: 1.125em;
+}
+
+#rootdirectory .loaderellipsis {
+    font-size: 0.75em;
+}
+
+@media only screen and (max-width: 60em) {
+    #dirviewfilesize {
+        display: none;
+    }
+    .entryfilesize {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 40em) {
+    #dirviewowner {
+        display: none;
+    }
+    .entryowner {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 20em) {
+    #dirviewlastmodified {
+        display: none;
+    }
+    .entrylastmodified {
+        display: none;
+    }
+}
