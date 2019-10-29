@@ -27,8 +27,9 @@ module.exports = {
     insertfileentry: fs.readFileSync(path.join(__dirname, "./sql/insertfileentry.sql"), "utf8"),
     insertfolderentry: fs.readFileSync(path.join(__dirname, "./sql/insertfolderentry.sql"), "utf8"),
     insertsharelinkentry: fs.readFileSync(path.join(__dirname, "./sql/insertsharelinkentry.sql"), "utf8"),
-    updaterefilename: fs.readFileSync(path.join(__dirname, "./sql/updatefilename.sql"), "utf8"),
-    updaterefoldername: fs.readFileSync(path.join(__dirname, "./sql/updatefoldername.sql"), "utf8"),
+    updatefilename: fs.readFileSync(path.join(__dirname, "./sql/updatefilename.sql"), "utf8"),
+    updatefile: fs.readFileSync(path.join(__dirname, "./sql/updatefile.sql"), "utf8"),
+    updatefoldername: fs.readFileSync(path.join(__dirname, "./sql/updatefoldername.sql"), "utf8"),
     updateshareaccesslevel: fs.readFileSync(path.join(__dirname, "./sql/updateshareaccesslevel.sql"), "utf8"),
     updateuseravatar: fs.readFileSync(path.join(__dirname, "./sql/updateuseravatar.sql"), "utf8"),
     updateuserpasswdhash: fs.readFileSync(path.join(__dirname, "./sql/updateuserpasswdhash.sql"), "utf8")

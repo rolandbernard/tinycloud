@@ -58,7 +58,8 @@ SELECT 	BIN_TO_UUID(ey.eyuuid) AS uuid,
                     ON (eya.eyuuid = sh.eyuuid
                     AND(sh.uruuid = UUID_TO_BIN(:useruuid)
                     OR sh.uruuid IS NULL))
-            WHERE re.oreyuuid = rea.oreyuuid) AS accesslevel,
+            WHERE rea.sheyuuid IS NULL
+              AND re.oreyuuid = rea.oreyuuid) AS accesslevel,
         (re.oreyuuid != re.eyuuid) AS isshare,
         BIN_TO_UUID(re.oreyuuid) AS shareuuid,
         (SELECT CONCAT(
@@ -72,8 +73,7 @@ SELECT 	BIN_TO_UUID(ey.eyuuid) AS uuid,
                     ON (eya.eyuuid = sh.eyuuid
                     AND(sh.uruuid = UUID_TO_BIN(:useruuid)
                     OR sh.uruuid IS NULL))
-            WHERE rea.sheyuuid IS NULL
-              AND re.oreyuuid = rea.oreyuuid) AS directaccesslevel
+              WHERE re.oreyuuid = rea.oreyuuid) AS directaccesslevel
     FROM entrys AS ey
         JOIN resolved_entrys AS re ON (ey.eyuuid = re.eyuuid)
         LEFT JOIN files AS fl ON (ey.eyuuid = fl.eyuuid)

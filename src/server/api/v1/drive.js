@@ -198,15 +198,40 @@ app.delete("/share/:uuid", async function (req, res) {
     }
 });
 
-// update / rename
-app.post("/:uuid", function (req, res) {
-    if(req.params.uuid.length != 36) {
+app.post("/:uuid", async function (req, res) {
+    if (req.params.uuid.length != 36) {
         res.status(400).end();
     } else {
+        try {
+            const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
+            const [entryrows, entryfields] = await db.promise().query(sql.getentryinfo, { entryuuid: req.params.uuid });
+            if (accessrows.length === 0 || entryrows.length === 0) {
+                res.status(404).end();
+            } else if (accessrows[0].accesslevel.includes("w")) {
+                if (req.files !== undefined && !entryrows[0].isfolder) {
+                    await db.promise().query(sql.updatefile, { entryuuid: entryrows[0].uuid, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: (req.token !== undefined ? req.token.uuid : null) });
+                    res.status(200).end();
+                } else if (typeof (req.body.newname) === 'string') {
+                    if (entryrows[0].isfolder) {
+                        await db.promise().query(sql.updatefoldername, { entryuuid: entryrows[0].uuid, name: req.body.newname, useruuid: (req.token !== undefined ? req.token.uuid : null) });
+                        res.status(200).end();
+                    } else {
+                        await db.promise().query(sql.updatefilename, { entryuuid: entryrows[0].uuid, name: req.body.newname, useruuid: (req.token !== undefined ? req.token.uuid : null) });
+                        res.status(200).end();
+                    }
+                } else {
+                    res.status(400).end();
+                }
+            } else {
+                res.status(400).end();
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).end();
+        }
     }
 });
 
-// new
 app.put("/", async function (req, res) {
     if (req.token !== undefined) {
         try {
@@ -244,15 +269,15 @@ app.put("/:uuid", async function (req, res) {
         res.status(400).end();
     } else {
         try {
-            const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
             const [parentrows, parentfields] = await db.promise().query(sql.getentryinfo, { entryuuid: req.params.uuid });
             if (parentrows.length === 1 && parentrows[0].isfolder) {
+                const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
                 if (accessrows.length === 0) {
                     res.status(404).end();
                 } else if (accessrows[0].accesslevel.includes("w")) {
                     if (req.files !== undefined) {
                         const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
-                        await db.promise().query(sql.insertfileentry, { uuid: uuidrows[0].uuid, name: req.files.file.name, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: req.token.uuid, parentuuid: parentrows[0].uuid });
+                        await db.promise().query(sql.insertfileentry, { uuid: uuidrows[0].uuid, name: req.files.file.name, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: (req.token !== undefined ? req.token.uuid : null), parentuuid: parentrows[0].uuid });
                         res.status(200).end();
                     } else if (typeof (req.body.foldername) === "string") {
                         const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
@@ -288,7 +313,7 @@ app.delete("/:uuid", async function (req, res) {
         res.status(400).end();
     } else {
         try {
-            const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
+            const [accessrows, accessfields] = await db.promise().query(sql.getaccessleveldirect, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
             if (accessrows[0].accesslevel === null) {
                 res.status(404).end();
             } else if (accessrows[0].accesslevel.includes("d")) {
