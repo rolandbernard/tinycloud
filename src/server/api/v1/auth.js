@@ -25,6 +25,23 @@ app.middle = async function (req, res, next) {
     next();
 };
 
+app.get("/extend", async function (req, res) {
+    if (req.token !== undefined) {
+        const object = {
+            forauth: true,
+            uuid: req.token.uuid,
+            username: req.token.username,
+        };
+        try {
+            const token = jwt.sign(object, config.keys.private, { algorithm: "ES384", expiresIn: 60 * 60 * 24 });
+            res.status(200);
+            res.json({ token: token });
+        } catch (err) { }
+    } else {
+        res.status(401).end();
+    }
+});
+
 app.post("/gettoken", async function (req, res) {
     let uuid;
     let success = false;
