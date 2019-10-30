@@ -5,9 +5,11 @@ function get_active_entry() {
     return active_entry;
 }
 
-function generate_entry(data, path_offset) {
+function generate_entry(data, path_prefix) {
     const node = document.createElement("div");
-    node.path_offset = path_offset.concat([{ name: data.name, uuid: data.uuid }]);
+    node.path = path_prefix.concat([{ name: data.name, uuid: data.uuid }]);
+    node.uuid = data.uuid;
+    node.data = data;
     node.drive_data = data;
     node.className = "entry";
     node.id = "entry~" + data.uuid;
@@ -75,17 +77,17 @@ function generate_entry(data, path_offset) {
     nodefilesize.classList.add("entryfilesize");
     nodefilesize.appendChild(document.createTextNode(generate_filesize_string(data.filesize)));
     node.append(nodefilesize);
+    const contextmenu = document.getElementById("contextmenu");
+    const renamemp = document.getElementById("rename");
+    const updatemp = document.getElementById("update");
+    const sharewithmp = document.getElementById("sharewith");
+    const deletemp = document.getElementById("delete");
+    const removemp = document.getElementById("remove");
     node.addEventListener("contextmenu", function (event) {
         event.just_set_active = true;
         event.just_opened_context = true;
         set_active(node);
-        const contextmenu = document.getElementById("contextmenu");
-        const renamemp = document.getElementById("rename");
-        const updatemp = document.getElementById("update");
-        const sharewithmp = document.getElementById("sharewith");
-        const deletemp = document.getElementById("delete");
-        const removemp = document.getElementById("remove");
-        if(data.accesslevel.includes("w")) {
+        if (data.accesslevel.includes("w")) {
             renamemp.style.display = "block";
             updatemp.style.display = "block";
             sharewithmp.style.display = "block";
@@ -94,12 +96,12 @@ function generate_entry(data, path_offset) {
             updatemp.style.display = "none";
             sharewithmp.style.display = "none";
         }
-        if(data.accesslevel.includes("d")) {
+        if (data.accesslevel.includes("d")) {
             deletemp.style.display = "block";
         } else {
             deletemp.style.display = "none";
         }
-        if(data.isshare && data.directaccesslevel.includes("d")) {
+        if (data.isshare && data.directaccesslevel.includes("d")) {
             removemp.style.display = "block";
         } else {
             removemp.style.display = "none"
@@ -125,18 +127,43 @@ function generate_entry(data, path_offset) {
     });
     if (data.isfolder) {
         node.addEventListener("dblclick", function (event) {
-            change_path(get_current_path().concat(node.path_offset));
+            change_path(node.path);
         });
     }
     return node;
 }
 
-function generate_dirview(data, path_offset) {
+function generate_dirview(data, path) {
     const node = document.createElement("div");
     node.className = "dirview";
-    node.id = "dirview~" + data.uuid;
+    node.id = "dirview~" + (data.uuid || "root");
+    node.path = path;
+    node.uuid = (data.uuid || null);
+    node.data = data;
+    node.addEventListener("dragenter", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        node.classList.add("dirviewdrag");
+        unset_all_active();
+    });
+    node.addEventListener("dragover", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    });
+    node.addEventListener("dragexit", function () {
+        event.stopPropagation();
+        node.classList.remove("dirviewdrag");
+    });
+    node.addEventListener("drop", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        upload_files_folders_drop(data.uuid, Array.from(event.dataTransfer.items).filter(function (el) {
+            return el.kind === "file";
+        }));
+        node.classList.remove("dirviewdrag");
+    });
     data.content.forEach(function (entry) {
-        node.appendChild(generate_entry(entry, path_offset));
+        node.appendChild(generate_entry(entry, path));
     });
     return node;
 }
@@ -157,16 +184,16 @@ async function generate_subdirview_with_loader(after, data_promise) {
     after.parentNode.insertBefore(node, after.nextSibling);
     const data = await data_promise;
     delete_all_childs(node);
-    node.appendChild(generate_dirview(data, after.path_offset));
+    node.appendChild(generate_dirview(data, after.path));
 }
 
-async function generate_root_directory_content(data_promise) {
+async function generate_root_directory_content(data_promise, path) {
     const node = document.getElementById("rootdirectory");
     delete_all_childs(node);
     node.appendChild(generate_loader())
     const data = await data_promise;
     delete_all_childs(node);
-    node.appendChild(generate_dirview(data, []));
+    node.appendChild(generate_dirview(data, path));
 }
 
 function delete_all_childs(node) {
@@ -254,4 +281,67 @@ function generate_filesize_string(filesize) {
         }
         return String(Math.round(amount * decimals) / decimals) + " " + units[unit_index];
     }
+}
+
+async function update_root_view_content() {
+    const root = document.getElementById("rootdirectory");
+    const root_dirview = root.childNodes[0];
+    await update_dirview_recursively(root_dirview);
+}
+
+async function update_dirview_recursively(node) {
+    const data = await get_drive_data(node.uuid);
+    const childs = Array.from(node.childNodes);
+    childs.forEach(function (child) {
+        if (child.className === "subdirectory") {
+            const child_dirview = child.childNodes[0];
+            const child_data = data.content.find(function (el) {
+                return el.uuid === child_dirview.uuid;
+            });
+            if (child_data) {
+                update_dirview_recursively(child_dirview);
+            } else {
+                node.removeChild(child);
+            }
+        } else {
+            const child_data = data.content.find(function (el) {
+                return el.uuid === child.uuid;
+            });
+            if (child_data) {
+                update_entry(child, child_data);
+            } else {
+                node.removeChild(child);
+            }
+        }
+    });
+    data.content.forEach(function (el) {
+        const child = Array.from(childs).find(function (child) {
+            return el.uuid === child.uuid;
+        });
+        if (!child) {
+            const prev_child = Array.from(childs).find(function (child) {
+                return el.isfolder > child.data.isfolder || el.name < child.data.name;
+            });
+            if(prev_child) {
+                node.insertBefore(generate_entry(el, node.path), prev_child);
+            } else {
+                node.appendChild(generate_entry(el, node.path));
+            }
+        }
+    });
+}
+
+function update_entry(oldnode, data) {
+    const nodename = oldnode.childNodes[0].childNodes[2];
+    const nodeowner = oldnode.childNodes[1];
+    const nodelastmodified = oldnode.childNodes[2];
+    const nodefilesize = oldnode.childNodes[3];
+    delete_all_childs(nodename);
+    nodename.appendChild(document.createTextNode(data.name));
+    delete_all_childs(nodeowner);
+    nodeowner.appendChild(document.createTextNode(generate_owner_string(data.owner)));
+    delete_all_childs(nodelastmodified);
+    nodelastmodified.appendChild(document.createTextNode(generate_lastmodified_string(data.lastmodifieddatetime, data.lastmodifieduser)));
+    delete_all_childs(nodefilesize);
+    nodefilesize.appendChild(document.createTextNode(generate_filesize_string(data.filesize)));
 }

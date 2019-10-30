@@ -12,7 +12,7 @@
     overflow-x: auto;
     white-space: nowrap;
     flex: 0 0 auto;
-    height: 2em;
+    height: max-content;
 }
 
 .pathseperator {
@@ -49,6 +49,11 @@
     display: flex;
     flex-flow: column;
     width: 100%;
+    min-height: 1.125em;
+}
+
+.dirviewdrag {
+    background: #bee9f7;
 }
 
 #rootdirectory {
@@ -130,6 +135,7 @@
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
     padding-left: 0.75em;
+    width: 100%;
     flex: 1 1 auto;
 }
 
@@ -142,18 +148,6 @@
     flex: 0 0 auto;
     overflow: hidden;
     height: 1.25em;
-}
-
-.entryfilesize {
-    width: 15vw;
-}
-
-.entryowner {
-    min-width: 5em;
-}
-
-.entrylastmodified {
-    min-width: 10em;
 }
 
 .dirviewheadercell {
@@ -171,21 +165,21 @@
 }
 
 #dirviewowner, #dirviewlastmodified, #dirviewfilesize {
-    width: 20vw;
-    max-width: 20em;
     flex: 0 0 auto;
 }
 
-#dirviewfilesize {
+#dirviewowner, .entryowner {
     width: 15vw;
-}
-
-#dirviewowner {
     min-width: 5em;
 }
 
-#dirviewlastmodified {
+#dirviewlastmodified, .entrylastmodified {
+    width: 20vw;
     min-width: 10em;
+}
+
+#dirviewfilesize, .entryfilesize {
+    width: 15vw;
 }
 
 .subdirectory {

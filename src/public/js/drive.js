@@ -1,31 +1,16 @@
 
 async function get_drive_data(uuid_or_null) {
-    if(uuid_or_null === null) {
-        const token = get_token();
-        const response = await fetch("/api/v1/drive", {
-            method: "GET",
-            headers: new Headers({
-                "Authorization": ("Bearer " + token),
-            })
-        });
-        if (response.status !== 200) {
-            return false;
-        } else {
-            return await response.json();
-        }
+    const token = get_token();
+    const response = await fetch("/api/v1/drive/" + (uuid_or_null || ""), {
+        method: "GET",
+        headers: new Headers({
+            "Authorization": ("Bearer " + token),
+        })
+    });
+    if (response.status !== 200) {
+        return false;
     } else {
-        const token = get_token();
-        const response = await fetch("/api/v1/drive/" + uuid_or_null, {
-            method: "GET",
-            headers: new Headers({
-                "Authorization": ("Bearer " + token),
-            })
-        });
-        if (response.status !== 200) {
-            return false;
-        } else {
-            return await response.json();
-        }
+        return await response.json();
     }
 }
 
@@ -37,7 +22,7 @@ function get_shares(uuid) {
 
 }
 
-function posed_share(uuid, username) {
+function post_share(uuid, username) {
 
 }
 
@@ -45,8 +30,19 @@ function delete_share(uuid) {
 
 }
 
-function delete_entry(uuid) {
-
+async function delete_entry(uuid) {
+    const token = get_token();
+    const response = await fetch("/api/v1/drive/" + uuid, {
+        method: "DELETE",
+        headers: new Headers({
+            "Authorization": ("Bearer " + token)
+        })
+    });
+    if (response.status !== 200) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function rename_entry(uuid) {
@@ -54,6 +50,49 @@ function rename_entry(uuid) {
 }
 
 function update_file(uuid) {
+
+}
+
+async function new_folder(uuid_or_null, name) {
+    const token = get_token();
+    const object = {
+        foldername: name
+    };
+    const response = await fetch("/api/v1/drive/" + (uuid_or_null || ""), {
+        method: "PUT",
+        headers: new Headers({
+            "Authorization": ("Bearer " + token),
+            "Content-Type": "application/json"
+        }),
+        body: JSON.stringify(object)
+    });
+    if (response.status !== 200) {
+        return false;
+    } else {
+        return await response.json();
+    }
+}
+
+async function upload_file(uuid_or_null, file) {
+    const token = get_token();
+    const data = new FormData();
+    data.append("file", file);
+    const response = await fetch("/api/v1/drive/" + (uuid_or_null || ""), {
+        method: "PUT",
+        headers: new Headers({
+            "Authorization": ("Bearer " + token)
+        }),
+        body: data
+    });
+    if (response.status !== 200) {
+        console.log("error");
+        return false;
+    } else {
+        return await response.json();
+    }
+}
+
+function add_sharelink(uuid_or_null, sharedentryuuid) {
 
 }
 

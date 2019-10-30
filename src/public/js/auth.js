@@ -111,27 +111,23 @@ function delete_credentials() {
 
 async function change_password(password) {
     const token = get_token();
-    if (token !== null) {
-        const object = {
-            password: password
-        };
-        const response = await fetch("/api/v1/user/password", {
-            method: "POST",
-            headers: new Headers({
-                "Authorization": ("Bearer " + token),
-                "Content-Type": "application/json"
-            }),
-            body: JSON.stringify(object)
-        });
-        if (response.status !== 200) {
-            return false;
-        } else {
-            if (localStorage.getItem("password") !== null) {
-                localStorage.setItem("password", password);
-            }
-            return true;
-        }
-    } else {
+    const object = {
+        password: password
+    };
+    const response = await fetch("/api/v1/user/password", {
+        method: "POST",
+        headers: new Headers({
+            "Authorization": ("Bearer " + token),
+            "Content-Type": "application/json"
+        }),
+        body: JSON.stringify(object)
+    });
+    if (response.status !== 200) {
         return false;
+    } else {
+        if (localStorage.getItem("password") !== null) {
+            localStorage.setItem("password", password);
+        }
+        return true;
     }
 }
