@@ -1,0 +1,52 @@
+#new:hover {
+    background: lightgrey;
+    cursor: pointer;
+}
+
+#newmenu, #contextmenu , #usermenu {
+    position: absolute;
+    background: white;
+    box-shadow: 0 0 0.5em 0 lightgrey;
+    border-radius: 0.2em;
+    overflow: hidden;
+    flex-flow: column;
+    z-index: 30;
+    white-space: nowrap;
+}
+
+#newmenu {
+    right: 1em;
+    bottom: 1em;
+}
+
+#usermenu {
+    right: 1em;
+    top: 1em;
+}
+
+.menupoint {
+    flex: 0 0 auto;
+    padding: 0.25em 0.5em 0.25em 0.5em;
+}
+
+.menupoint:hover {
+    background: lightgrey;
+    cursor: pointer;
+}
+
+.menusvg {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.menutext {
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    margin-left: 0.5em;
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    color: #111111;
+}

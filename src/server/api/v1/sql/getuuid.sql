@@ -1,0 +1,1 @@
+SELECT UUID() AS uuid;

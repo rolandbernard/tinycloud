@@ -1,99 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>TinyCloud</title>
-        <meta name="description" content="">
-        <meta name="keywords" content="">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/static/css/html5reset.css">
-        <link rel="stylesheet" href="/static/css/fonts.css">
-        <link rel="stylesheet" href="/static/css/styles.css">
-        <link rel="stylesheet" href="/static/css/loader.css">
-        <link rel="icon" href="/static/logo/logoblue.svg">
-        <script src="/static/js/script.js"></script>
-    </head>
-    <body>
-        <div id="page">
-            <div id="header">
-                <img id="logo" src="/static/logo/logowhite.svg"/>
-                <div id="user">
-                </div>
-            </div>
-            <div id="explorer" style="display: none;">
-                <div id="path">
-                </div>
-                <div class="dirviewheader">
-                    <div id="dirviewname" class="dirviewcell dirviewheadercell">Name</div>
-                    <div id="dirviewowner" class="dirviewcell dirviewheadercell">Owner</div>
-                    <div id="dirviewlastmodified" class="dirviewcell dirviewheadercell">Last modified</div>
-                    <div id="dirviewfilesize" class="dirviewcell dirviewheadercell">File size</div>
-                </div>
-                <div id="rootdirectory">
-                </div>
-            </div>
-            <div id="login" style="display: none;">
-                <form name="login" id="loginform">
-                    <div id="signinheader">Sign in</div>
-                    <div class="infotext">Username</div>
-                    <input id="username" name="username" type="text"  autocomplete="off"/>
-                    <div class="infotext">Password</div>
-                    <input id="password" name="password" type="password"/>
-                    <div id="infotexterror" class="infotext"></div>
-                    <div id="rememberall"><input id="rememberme" type="checkbox"/><div id="remembertext">Remember me</div></div>
-                    <input id="signin" type="submit" value="Sign in"/>
-                </form>
-            </div>
-            <div id="initialloader" class="loaderellipsis">
-                <div></div><div></div><div></div><div></div>
+
+<head>
+    <title>TinyCloud</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/logo/logoblue.svg">
+    <link rel="stylesheet" href="/static/css/html5reset.css">
+    <link rel="stylesheet" href="/static/css/fonts.css">
+    <link rel="stylesheet" href="/static/css/misc.css">
+    <link rel="stylesheet" href="/static/css/explorer.css">
+    <link rel="stylesheet" href="/static/css/input.css">
+    <link rel="stylesheet" href="/static/css/menus.css">
+    <link rel="stylesheet" href="/static/css/loader.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <script src="/static/js/drive.js"></script>
+    <script src="/static/js/display.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/misc.js"></script>
+</head>
+
+<body>
+    <div id="page">
+        <div id="header">
+            <img id="logo" src="/static/logo/logowhite.svg" />
+            <div id="user">
             </div>
         </div>
-        <div id="uploadloading" style="display: none;">
+        <div id="explorer" style="display: none;">
+            <div id="path">
+            </div>
+            <div class="dirviewheader">
+                <div id="dirviewname" class="dirviewcell dirviewheadercell">Name</div>
+                <div id="dirviewowner" class="dirviewcell dirviewheadercell">Owner</div>
+                <div id="dirviewlastmodified" class="dirviewcell dirviewheadercell">Last modified</div>
+                <div id="dirviewfilesize" class="dirviewcell dirviewheadercell">File size</div>
+            </div>
+            <div id="rootdirectory">
+            </div>
+        </div>
+        <div id="login" style="display: none;">
+            <form name="login" id="loginform">
+                <div id="signinheader">Sign in</div>
+                <div class="infotext">Username</div>
+                <input id="username" name="username" type="text" autocomplete="off" />
+                <div class="infotext">Password</div>
+                <input id="password" name="password" type="password" />
+                <div id="infotexterror" class="infotext"></div>
+                <div id="rememberall"><input id="rememberme" type="checkbox" />
+                    <div id="remembertext">Remember me</div>
+                </div>
+                <input id="signin" type="submit" value="Sign in" />
+            </form>
+        </div>
+        <div id="initialloader" class="loaderellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
         <div id="new" style="display: none;">
-            <img id="newsvg" src="/static/icon/new.svg"/><div id="newtext">New</div>
+            <img id="newsvg" src="/static/icon/new.svg" /><div id="newtext">New</div>
         </div>
         <div id="newmenu" style="display: none;">
             <div id="newfolder" class="menupoint">
-                <img class="menusvg" src="/static/icon/newfolder.svg"/><div class="menutext">Folder</div>
+                <img class="menusvg" src="/static/icon/newfolder.svg" />
+                <div class="menutext">New folder</div>
             </div>
             <div id="uploadfile" class="menupoint">
-                <img class="menusvg" src="/static/icon/upload.svg"/><div class="menutext">Upload file</div>
+                <img class="menusvg" src="/static/icon/upload.svg" />
+                <div class="menutext">Upload file</div>
             </div>
             <div id="addshared" class="menupoint">
-                <img class="menusvg" src="/static/icon/share.svg"/><div class="menutext">Add shared</div>
+                <img class="menusvg" src="/static/icon/share.svg" />
+                <div class="menutext">Add shared</div>
             </div>
         </div>
         <div id="contextmenu" style="display: none;">
             <div id="rename" class="menupoint">
-                <img class="menusvg" src="/static/icon/edit.svg"/><div class="menutext">Reaname</div>
+                <img class="menusvg" src="/static/icon/edit.svg" />
+                <div class="menutext">Reaname</div>
             </div>
             <div id="download" class="menupoint">
-                <img class="menusvg" src="/static/icon/download.svg"/><div class="menutext">Download</div>
+                <img class="menusvg" src="/static/icon/download.svg" />
+                <div class="menutext">Download</div>
             </div>
             <div id="update" class="menupoint">
-                <img class="menusvg" src="/static/icon/update.svg"/><div class="menutext">Update</div>
+                <img class="menusvg" src="/static/icon/update.svg" />
+                <div class="menutext">Update</div>
             </div>
             <div id="history" class="menupoint">
-                <img class="menusvg" src="/static/icon/history.svg"/><div class="menutext">History</div>
+                <img class="menusvg" src="/static/icon/history.svg" />
+                <div class="menutext">History</div>
             </div>
             <div id="sharewith" class="menupoint">
-                <img class="menusvg" src="/static/icon/share.svg"/><div class="menutext">Share with</div>
+                <img class="menusvg" src="/static/icon/share.svg" />
+                <div class="menutext">Share with</div>
             </div>
             <div id="delete" class="menupoint">
-                <img class="menusvg" src="/static/icon/delete.svg"/><div class="menutext">Delete</div>
+                <img class="menusvg" src="/static/icon/delete.svg" />
+                <div class="menutext">Delete</div>
+            </div>
+            <div id="remove" class="menupoint">
+                <img class="menusvg" src="/static/icon/clear.svg" />
+                <div class="menutext">Remove</div>
             </div>
         </div>
         <div id="usermenu" style="display: none;">
             <div id="changeavatar" class="menupoint">
-                <img class="menusvg" src="/static/icon/account.svg"/><div class="menutext">Change avatar</div>
+                <img class="menusvg" src="/static/icon/account.svg" />
+                <div class="menutext">Change avatar</div>
             </div>
             <div id="changepassword" class="menupoint">
-                <img class="menusvg" src="/static/icon/key.svg"/><div class="menutext">Change password</div>
+                <img class="menusvg" src="/static/icon/key.svg" />
+                <div class="menutext">Change password</div>
             </div>
             <div id="logout" class="menupoint">
-                <img class="menusvg" src="/static/icon/signout.svg"/><div class="menutext">Sign out</div>
+                <img class="menusvg" src="/static/icon/signout.svg" />
+                <div class="menutext">Sign out</div>
             </div>
         </div>
-    </body>
+    </div>
+    <div id="overlays">
+        <div id="fileupload" style="display: none;">
+            <form id="fileuploadform" enctype="multipart/form-data">
+                <div id="fileuploadclose" class="close">
+                    <img class="closesvg" src="/static/icon/clear.svg" />
+                </div>
+                <div id="fileuploadbox">
+                    <input type="file" name="file" id="file" multiple/>
+                    <label id="fileuploadlable" for="file">
+                        <div id="choosefile">Choose a file</div>
+                    </label>
+                    <div class="fileuploadinginfo"></div>
+                </div>
+            </form>
+        </div>
+        <div id="uploadloading" style="display: none;">
+        </div>
+    </div>
+</body>
 </html>

@@ -20,7 +20,7 @@ app.get("/", function (req, res) {
     res.status(200);
     res.sendFile(path.join(__dirname, "../public/index.html"));
 });
-app.use("/static/", express.static(path.join(__dirname, "../public")));
+app.use("/static/", express.static(path.join(__dirname, "../public/"), { /*cacheControl: true , maxAge: 3600000*/ }));
 app.use("/api/", api);
 app.use(function (req, res) {
     res.status(404);
@@ -28,8 +28,7 @@ app.use(function (req, res) {
 });
 app.use(function (err, req, res, next) {
     console.error(err);
-    res.status(400);
-    res.sendFile(path.join(__dirname, "../public/400.html"));
+    res.status(500).end();
 });
 
 http.createServer(app).listen(config.ports.http);
