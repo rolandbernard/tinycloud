@@ -34,7 +34,7 @@ WITH RECURSIVE resolved_entrys (oreyuuid, eyuuid, sheyuuid) AS (
     UNION
     SELECT re.oreyuuid, ey.eyuuid, ey.eyparentuuid
         FROM entrys AS ey
-            JOIN resolved_parrent_entrys AS re ON (ey.eyuuid = re.eyparentuuid)
+            JOIN resolved_parrent_entrys_direct AS re ON (ey.eyuuid = re.eyparentuuid)
 )
 SELECT 	BIN_TO_UUID(ey.eyuuid) AS uuid,
 		NVL(fd.fdname, fl.flname) AS name,

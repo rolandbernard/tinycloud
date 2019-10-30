@@ -5,7 +5,7 @@ WITH RECURSIVE resolved_parrent_entrys_direct (eyuuid, eyparentuuid) AS (
     UNION
     SELECT ey.eyuuid, ey.eyparentuuid
         FROM entrys AS ey
-            JOIN resolved_parrent_entrys AS re
+            JOIN resolved_parrent_entrys_direct AS re
                 ON (ey.eyuuid = re.eyparentuuid)
 )
 SELECT CONCAT(
