@@ -238,17 +238,23 @@ app.put("/", async function (req, res) {
             if (req.files !== undefined) {
                 const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                 await db.promise().query(sql.insertfileentry, { uuid: uuidrows[0].uuid, name: req.files.file.name, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: req.token.uuid, parentuuid: null });
-                res.status(200).end();
+                res.status(200).json({
+                    uuid: uuidrows[0].uuid
+                });
             } else if (typeof (req.body.foldername) === "string") {
                 const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                 await db.promise().query(sql.insertfolderentry, { uuid: uuidrows[0].uuid, name: req.body.foldername, useruuid: req.token.uuid, parentuuid: null });
-                res.status(200).end();
+                res.status(200).json({
+                    uuid: uuidrows[0].uuid
+                });
             } else if (typeof (req.body.shareentryuuid) === "string") {
                 const [sharerows, sharefields] = await db.promise().query(sql.getbestentryshare, { useruuid: req.token.uuid, entryuuid: req.body.shareentryuuid });
                 if (sharerows.length >= 1) {
                     const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                     await db.promise().query(sql.insertsharelinkentry, { uuid: uuidrows[0].uuid, parentuuid: null, shareuuid: sharerows[0].uuid, useruuid: req.token.uuid });
-                    res.status(200).end();
+                    res.status(200).json({
+                        uuid: uuidrows[0].uuid
+                    });
                 } else {
                     res.status(401).end();
                 }
@@ -278,17 +284,23 @@ app.put("/:uuid", async function (req, res) {
                     if (req.files !== undefined) {
                         const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                         await db.promise().query(sql.insertfileentry, { uuid: uuidrows[0].uuid, name: req.files.file.name, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: (req.token !== undefined ? req.token.uuid : null), parentuuid: parentrows[0].uuid });
-                        res.status(200).end();
+                        res.status(200).json({
+                            uuid: uuidrows[0].uuid
+                        });
                     } else if (typeof (req.body.foldername) === "string") {
                         const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                         await db.promise().query(sql.insertfolderentry, { uuid: uuidrows[0].uuid, name: req.body.foldername, useruuid: (req.token !== undefined ? req.token.uuid : null), parentuuid: parentrows[0].uuid });
-                        res.status(200).end();
+                        res.status(200).json({
+                            uuid: uuidrows[0].uuid
+                        });
                     } else if (typeof (req.body.shareentryuuid) === "string") {
                         const [sharerows, sharefields] = await db.promise().query(sql.getbestentryshare, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.body.shareentryuuid });
                         if (sharerows.length >= 1) {
                             const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                             await db.promise().query(sql.insertsharelinkentry, { uuid: uuidrows[0].uuid, parentuuid: parentrows[0].uuid, shareuuid: sharerows[0].uuid, useruuid: (req.token !== undefined ? req.token.uuid : null) });
-                            res.status(200).end();
+                            res.status(200).json({
+                                uuid: uuidrows[0].uuid
+                            });
                         } else {
                             res.status(401).end();
                         }
