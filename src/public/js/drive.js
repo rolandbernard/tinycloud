@@ -14,8 +14,19 @@ async function get_drive_data(uuid_or_null) {
     }
 }
 
-function get_download_token(uuid) {
-    
+async function get_download_token(uuid) {
+    const token = get_token();
+    const response = await fetch("/api/v1/auth/download/" + uuid, {
+        method: "GET",
+        headers: new Headers({
+            "Authorization": ("Bearer " + token),
+        })
+    });
+    if (response.status !== 200) {
+        return false;
+    } else {
+        return (await response.json()).token;
+    }
 }
 
 function get_shares(uuid) {
@@ -85,7 +96,6 @@ async function upload_file(uuid_or_null, file) {
         body: data
     });
     if (response.status !== 200) {
-        console.log("error");
         return false;
     } else {
         return await response.json();

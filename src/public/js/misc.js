@@ -247,6 +247,17 @@ window.addEventListener("load", async function () {
         }
     });
 
+    const download = document.getElementById("download");
+    download.addEventListener("click", async function () {
+        const entry = get_active_entry();
+        if(entry) {
+            const token = await get_download_token(entry.data.uuid);
+            if(token) {
+                window.location.href = "/api/v1/download/" + token;
+            }
+        }
+    });
+
     const explorer = document.getElementById("explorer");
     explorer.addEventListener("click", function (event) {
         if (event.just_set_active === undefined) {
