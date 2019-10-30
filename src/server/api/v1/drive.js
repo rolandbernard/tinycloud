@@ -208,7 +208,7 @@ app.post("/:uuid", async function (req, res) {
             if (accessrows.length === 0 || entryrows.length === 0) {
                 res.status(404).end();
             } else if (accessrows[0].accesslevel.includes("w")) {
-                if (req.files !== undefined && !entryrows[0].isfolder) {
+                if (req.files && req.files.file !== undefined && !entryrows[0].isfolder) {
                     await db.promise().query(sql.updatefile, { entryuuid: entryrows[0].uuid, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: (req.token !== undefined ? req.token.uuid : null) });
                     res.status(200).end();
                 } else if (typeof (req.body.newname) === 'string') {
@@ -235,7 +235,7 @@ app.post("/:uuid", async function (req, res) {
 app.put("/", async function (req, res) {
     if (req.token !== undefined) {
         try {
-            if (req.files !== undefined && req.files.file !== undefined) {
+            if (req.files && req.files.file !== undefined) {
                 const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                 await db.promise().query(sql.insertfileentry, { uuid: uuidrows[0].uuid, name: req.files.file.name, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: req.token.uuid, parentuuid: null });
                 res.status(200).json({
@@ -281,7 +281,7 @@ app.put("/:uuid", async function (req, res) {
                 if (accessrows.length === 0) {
                     res.status(404).end();
                 } else if (accessrows[0].accesslevel.includes("w")) {
-                    if (req.files !== undefined && req.files.file !== undefined) {
+                    if (req.files && req.files.file !== undefined) {
                         const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
                         await db.promise().query(sql.insertfileentry, { uuid: uuidrows[0].uuid, name: req.files.file.name, size: req.files.file.size, contenttype: req.files.file.mimetype, data: req.files.file.data, useruuid: (req.token !== undefined ? req.token.uuid : null), parentuuid: parentrows[0].uuid });
                         res.status(200).json({
