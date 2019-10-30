@@ -209,7 +209,8 @@ window.addEventListener("load", async function () {
     fileuploadbox.addEventListener("drop", function (event) {
         event.preventDefault();
         const entry = get_active_entry();
-        const uuid = (entry !== null ? (entry.path.length > 1 ? entry.path[entry.path.length - 1] : null) : null);
+        const path = get_current_path();
+        const uuid = (entry !== null ? (entry.path.length > 1 ? entry.path[entry.path.length - 1].uuid : null) : (path.length > 1 ? path[path.length - 1].uuid : null));
         upload_files_folders_drop(uuid, Array.from(event.dataTransfer.items).filter(function (el) {
             return el.kind === "file";
         }));
@@ -222,7 +223,8 @@ window.addEventListener("load", async function () {
     const fileuploadinput = document.getElementById("file");
     fileuploadinput.addEventListener("change", function () {
         const entry = get_active_entry();
-        const uuid = (entry !== null ? (entry.path.length > 1 ? entry.path[entry.path.length - 1] : null) : null);
+        const path = get_current_path();
+        const uuid = (entry !== null ? (entry.path.length > 1 ? entry.path[entry.path.length - 2].uuid : null) : (path.length > 0 ? path[path.length - 1].uuid : null));
         upload_files_input(uuid, Array.from(fileuploadinput.files));
         fileupload.style.display = "none";
         // page.style.filter = "none";
