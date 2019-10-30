@@ -315,12 +315,12 @@ async function update_dirview_recursively(node) {
         }
     });
     data.content.forEach(function (el) {
-        const child = Array.from(childs).find(function (child) {
+        const child = childs.find(function (child) {
             return el.uuid === child.uuid;
         });
         if (!child) {
-            const prev_child = Array.from(childs).find(function (child) {
-                return el.isfolder > child.data.isfolder || el.name < child.data.name;
+            const prev_child = childs.find(function (child) {
+                return child.className !== "subdirectory" && el.isfolder >= child.data.isfolder && el.name < child.data.name;
             });
             if(prev_child) {
                 node.insertBefore(generate_entry(el, node.path), prev_child);
