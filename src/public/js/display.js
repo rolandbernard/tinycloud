@@ -22,6 +22,7 @@ function generate_entry(data, path_prefix) {
         const nodeexpandsvg = document.createElement("img");
         nodeexpandsvg.className = "entryexpandsvg";
         nodeexpandsvg.src = "/static/icon/expand.svg";
+        nodeexpandsvg.draggable = false;
         nodeexpand.appendChild(nodeexpandsvg);
         nodeexpand.addEventListener("click", function expand() {
             nodeexpandsvg.src = "/static/icon/expanded.svg";
@@ -39,6 +40,7 @@ function generate_entry(data, path_prefix) {
     const nodeicon = document.createElement("img");
     nodeicon.classList.add("dirviewcell");
     nodeicon.classList.add("entryicon");
+    nodeicon.draggable = false;
     if (data.isfolder) {
         if (data.isshare) {
             nodeicon.src = "/static/icon/sharefolderblue.svg";
@@ -125,6 +127,14 @@ function generate_entry(data, path_prefix) {
         event.just_set_active = true;
         set_active(node);
     });
+    if((!data.isshare && data.accesslevel.includes("d")) || (data.isshare && data.directaccesslevel.includes("d"))) {
+        node.draggable = true;
+        node.addEventListener("dragstart", function (event) {
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", (data.isshare ? data.shareuuid : data.uuid));
+            event.dataTransfer.setDragImage(nodeicon, 0, 0);
+        });
+    }
     if (data.isfolder) {
         node.addEventListener("dblclick", function (event) {
             change_path(node.path);
@@ -140,28 +150,37 @@ function generate_dirview(data, path) {
     node.path = path;
     node.uuid = (data.uuid || null);
     node.data = data;
-    node.addEventListener("dragenter", function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        node.classList.add("dirviewdrag");
-        unset_all_active();
-    });
-    node.addEventListener("dragover", function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    });
-    node.addEventListener("dragexit", function () {
-        event.stopPropagation();
-        node.classList.remove("dirviewdrag");
-    });
-    node.addEventListener("drop", function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        upload_files_folders_drop(data.uuid, Array.from(event.dataTransfer.items).filter(function (el) {
-            return el.kind === "file";
-        }));
-        node.classList.remove("dirviewdrag");
-    });
+    if (path.length === 0 || data.accesslevel.includes("w")) {
+        node.addEventListener("dragenter", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            node.classList.add("dirviewdrag");
+            unset_all_active();
+        });
+        node.addEventListener("dragover", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+        node.addEventListener("dragexit", function () {
+            event.stopPropagation();
+            node.classList.remove("dirviewdrag");
+        });
+        node.addEventListener("drop", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const drag_data = event.dataTransfer.getData("text/plain"); 
+            if (drag_data && drag_data.length === 36) {
+                move_entry(drag_data, data.uuid).then(function () {
+                    update_root_view_content();
+                });
+            } else {
+                upload_files_folders_drop(data.uuid, Array.from(event.dataTransfer.items).filter(function (el) {
+                    return el.kind === "file";
+                }));
+            }
+            node.classList.remove("dirviewdrag");
+        });
+    }
     data.content.forEach(function (entry) {
         node.appendChild(generate_entry(entry, path));
     });

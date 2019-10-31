@@ -64,6 +64,26 @@ function update_file(uuid) {
 
 }
 
+async function move_entry(entryuuid, parentuuid_or_null) {
+    const token = get_token();
+    const object = {
+        newparent: parentuuid_or_null
+    };
+    const response = await fetch("/api/v1/drive/" + entryuuid, {
+        method: "POST",
+        headers: new Headers({
+            "Authorization": ("Bearer " + token),
+            "Content-Type": "application/json"
+        }),
+        body: JSON.stringify(object)
+    });
+    if (response.status !== 200) {
+        return false;
+    } else {
+        return false;
+    }
+}
+
 async function new_folder(uuid_or_null, name) {
     const token = get_token();
     const object = {
