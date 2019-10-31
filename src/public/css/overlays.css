@@ -1,4 +1,4 @@
-#fileuploadform {
+#fileuploadform, #fileupdateform {
     left: 50%;
     top: 40%;
     transform: translate(-50%, -50%);
@@ -10,17 +10,17 @@
     padding: 0.25em;
 }
 
-#choosefile {
+.choosefile {
     display: block;
     font-weight: bold;
 }
 
-#fileuploadlable {
+#fileuploadlable, #fileupdatelable {
     font-family: "Roboto Mono", monospace;
     font-size: 1em;
 }
 
-#fileuploadbox {
+#fileuploadbox, #fileupdatebox {
     white-space: nowrap;
     display: block;
     padding: 4em;
@@ -31,15 +31,15 @@
     background: #eeeeee;
 }
 
-#fileuploadlable:hover #choosefile {
+#fileuploadlable:hover .choosefile, #fileupdatelable:hover .choosefile {
     color: #44a6c6;
 }
 
-#fileuploadlable:hover {
+#fileuploadlable:hover, #fileupdatelable:hover {
     cursor: pointer;
 }
 
-#file {
+#fileupdatein, #fileuploadin {
     display: none;
 }
 

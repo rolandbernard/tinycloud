@@ -52,20 +52,36 @@ function user_logout() {
 
 let uploading_count = 0;
 
-async function upload_files_input(uuid_or_null, files) {
+function upload_start() {
     uploading_count++;
     const uploadloading = document.getElementById("uploadloading");
+    delete_all_childs(uploadloading);
     uploadloading.appendChild(generate_loader());
     uploadloading.style.display = "block";
-    await Promise.all(files.map(function (file) {
-        return upload_file(uuid_or_null, file);
-    }));
+}
+
+function upload_end() {
     uploading_count--;
     if(uploading_count === 0) {
         uploadloading.style.display = "none";
         delete_all_childs(uploadloading);
     }
-    update_root_view_content();
+}
+
+async function upload_files_input(uuid_or_null, files) {
+    upload_start();
+    await Promise.all(files.map(function (file) {
+        return upload_file(uuid_or_null, file);
+    }));
+    await update_root_view_content();
+    upload_end();
+}
+
+async function update_file_input(uuid_or_null, file) {
+    upload_start();
+    await update_file(uuid_or_null, file);
+    await update_root_view_content();
+    upload_end();
 }
 
 async function upload_recursively(uuid_or_null, entry) {
@@ -91,10 +107,7 @@ async function upload_recursively(uuid_or_null, entry) {
 }
 
 async function upload_files_folders_drop(uuid_or_null, files) {
-    uploading_count++;
-    const uploadloading = document.getElementById("uploadloading");
-    uploadloading.appendChild(generate_loader());
-    uploadloading.style.display = "block";
+    upload_start();
     await Promise.all(files.map(function (file) {
         if (file.webkitGetAsEntry) {
             return upload_recursively(uuid_or_null, file.webkitGetAsEntry());
@@ -102,12 +115,8 @@ async function upload_files_folders_drop(uuid_or_null, files) {
             return upload_file(uuid_or_null, file.getAsFile());
         }
     }));
-    uploading_count--;
-    if (uploading_count === 0) {
-        uploadloading.style.display = "none";
-        delete_all_childs(uploadloading);
-    }
-    update_root_view_content();
+    await update_root_view_content();
+    upload_end();
 }
 
 window.addEventListener("load", async function () {
@@ -220,7 +229,7 @@ window.addEventListener("load", async function () {
         page.style.pointerEvents = "all";
     });
 
-    const fileuploadinput = document.getElementById("file");
+    const fileuploadinput = document.getElementById("fileuploadin");
     fileuploadinput.addEventListener("change", function () {
         const entry = get_active_entry();
         const path = get_current_path();
@@ -238,11 +247,60 @@ window.addEventListener("load", async function () {
         page.style.pointerEvents = "all";
     });
 
+    const fileupdate = document.getElementById("fileupdate");
+    const fileupdatebox = document.getElementById("fileupdatebox");
+    fileupdatebox.addEventListener("dragenter", function (event) {
+        event.preventDefault();
+        fileupdatebox.classList.add("fileuploaddrag");
+    });
+    fileupdatebox.addEventListener("dragexit", function () {
+        fileupdatebox.classList.remove("fileuploaddrag");
+    });
+    fileupdatebox.addEventListener("dragover", function (event) {
+        event.preventDefault();
+    });
+    fileupdatebox.addEventListener("drop", function (event) {
+        event.preventDefault();
+        const entry = get_active_entry();
+        update_file_input(entry.uuid, Array.from(event.dataTransfer.items).filter(function (el) {
+            return el.kind === "file";
+        })[0].getAsFile());
+        fileupdatebox.classList.remove("fileuploaddrag");
+        fileupdate.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+    });
+
+    const fileupdateinput = document.getElementById("fileupdatein");
+    fileupdateinput.addEventListener("change", function () {
+        const entry = get_active_entry();
+        update_file_input(entry.uuid, fileupdateinput.files[0]);
+        fileupdate.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+    });
+
+    const fileupdateclose = document.getElementById("fileupdateclose");
+    fileupdateclose.addEventListener("click", function () {
+        fileupdate.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+    });
+
     const deletemp = document.getElementById("delete");
     deletemp.addEventListener("click", async function () {
         const entry = get_active_entry();
-        if(entry) {
+        if(entry /*&& confirm("Delete this entry?")*/) {
             await delete_entry(entry.data.uuid);
+            update_root_view_content();
+        }
+    });
+
+    const remove = document.getElementById("remove");
+    remove.addEventListener("click", async function () {
+        const entry = get_active_entry();
+        if(entry /*&& confirm("Remove this entry?")*/) {
+            await delete_entry(entry.data.shareuuid);
             update_root_view_content();
         }
     });
@@ -256,6 +314,13 @@ window.addEventListener("load", async function () {
                 window.location.href = "/api/v1/download/" + token;
             }
         }
+    });
+
+    const update = document.getElementById("update");
+    update.addEventListener("click", async function () {
+        fileupdate.style.display = "block";
+        // page.style.filter = "blur(0.5px)";
+        page.style.pointerEvents = "none";
     });
 
     const explorer = document.getElementById("explorer");

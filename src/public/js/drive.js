@@ -60,14 +60,28 @@ function rename_entry(uuid) {
 
 }
 
-function update_file(uuid) {
-
+async function update_file(uuid, file) {
+    const token = get_token();
+    const data = new FormData();
+    data.append("file", file);
+    const response = await fetch("/api/v1/drive/" + uuid, {
+        method: "POST",
+        headers: new Headers({
+            "Authorization": ("Bearer " + token)
+        }),
+        body: data
+    });
+    if (response.status !== 200) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 async function move_entry(entryuuid, parentuuid_or_null) {
     const token = get_token();
     const object = {
-        newparent: parentuuid_or_null
+        newparent: (parentuuid_or_null || null)
     };
     const response = await fetch("/api/v1/drive/" + entryuuid, {
         method: "POST",

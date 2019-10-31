@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/static/css/fonts.css">
     <link rel="stylesheet" href="/static/css/misc.css">
     <link rel="stylesheet" href="/static/css/explorer.css">
-    <link rel="stylesheet" href="/static/css/input.css">
+    <link rel="stylesheet" href="/static/css/overlays.css">
     <link rel="stylesheet" href="/static/css/menus.css">
     <link rel="stylesheet" href="/static/css/loader.css">
     <link rel="stylesheet" href="/static/css/login.css">
@@ -130,9 +130,23 @@
                     <img class="closesvg" src="/static/icon/clear.svg" />
                 </div>
                 <div id="fileuploadbox">
-                    <input type="file" name="file" id="file" multiple/>
-                    <label id="fileuploadlable" for="file">
-                        <div id="choosefile">Choose a file</div>
+                    <input type="file" name="file" id="fileuploadin" multiple/>
+                    <label id="fileuploadlable" for="fileuploadin">
+                        <div class="choosefile">Choose a file</div>
+                    </label>
+                    <div class="fileuploadinginfo"></div>
+                </div>
+            </form>
+        </div>
+        <div id="fileupdate" style="display: none;">
+            <form id="fileupdateform" enctype="multipart/form-data">
+                <div id="fileupdateclose" class="close">
+                    <img class="closesvg" src="/static/icon/clear.svg" />
+                </div>
+                <div id="fileupdatebox">
+                    <input type="file" name="file" id="fileupdatein"/>
+                    <label id="fileupdatelable" for="fileupdatein">
+                        <div class="choosefile">Choose a file</div>
                     </label>
                     <div class="fileuploadinginfo"></div>
                 </div>

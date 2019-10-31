@@ -91,17 +91,20 @@ function generate_entry(data, path_prefix) {
         set_active(node);
         if (data.accesslevel.includes("w")) {
             renamemp.style.display = "block";
-            updatemp.style.display = "block";
             sharewithmp.style.display = "block";
         } else {
             renamemp.style.display = "none";
-            updatemp.style.display = "none";
             sharewithmp.style.display = "none";
         }
         if (data.accesslevel.includes("d")) {
             deletemp.style.display = "block";
         } else {
             deletemp.style.display = "none";
+        }
+        if (!data.isfolder && data.accesslevel.includes("w")) {
+            updatemp.style.display = "block";
+        } else {
+            updatemp.style.display = "none";
         }
         if (data.isshare && data.directaccesslevel.includes("d")) {
             removemp.style.display = "block";
@@ -346,7 +349,7 @@ async function update_dirview_recursively(node) {
         });
         if (!child) {
             const prev_child = childs.find(function (child) {
-                return child.className !== "subdirectory" && el.isfolder >= child.data.isfolder && el.name < child.data.name;
+                return child.className !== "subdirectory" && ((el.isfolder >= child.data.isfolder && el.name < child.data.name) || el.isfolder > child.data.isfolder);
             });
             if (prev_child) {
                 node.insertBefore(generate_entry(el, node.path), prev_child);
