@@ -32,7 +32,7 @@ WITH RECURSIVE resolved_entrys (oreyuuid, eyuuid, sheyuuid) AS (
 ), resolved_parrent_entrys_direct (oreyuuid, eyuuid, eyparentuuid) AS (
     SELECT ey.eyuuid, ey.eyuuid, ey.eyparentuuid
         FROM entrys AS ey
-        WHERE ey.eyuuid = UUID_TO_BIN(:entryuuid)
+        WHERE ey.eyparentuuid IS NULL
     UNION
     SELECT re.oreyuuid, ey.eyuuid, ey.eyparentuuid
         FROM entrys AS ey
