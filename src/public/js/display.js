@@ -161,24 +161,31 @@ function generate_dirview(data, path) {
     node.uuid = ((data.isshare ? data.shareuuid: data.uuid) || null);
     node.data = data;
     if (path.length === 0 || data.accesslevel.includes("w")) {
+        let enter_exit = 0;
         node.addEventListener("dragenter", function (event) {
             event.preventDefault();
             event.stopPropagation();
-            node.classList.add("dirviewdrag");
-            unset_all_active();
+            if (enter_exit === 0) {
+                node.classList.add("dirviewdrag");
+                unset_all_active();
+            }
+            enter_exit++;
         });
         node.addEventListener("dragover", function (event) {
             event.preventDefault();
             event.stopPropagation();
         });
-        node.addEventListener("dragexit", function () {
+        node.addEventListener("dragleave", function (event) {
             event.stopPropagation();
-            node.classList.remove("dirviewdrag");
+            enter_exit--;
+            if (enter_exit === 0) {
+                node.classList.remove("dirviewdrag");
+            }
         });
         node.addEventListener("drop", function (event) {
             event.preventDefault();
             event.stopPropagation();
-            const drag_data = event.dataTransfer.getData("text/plain"); 
+            const drag_data = event.dataTransfer.getData("text/plain");
             if (drag_data && drag_data.length === 36) {
                 move_entry(drag_data, data.uuid).then(function () {
                     update_root_view_content();
@@ -188,6 +195,7 @@ function generate_dirview(data, path) {
                     return el.kind === "file";
                 }));
             }
+            enter_exit = 0;
             node.classList.remove("dirviewdrag");
         });
     }

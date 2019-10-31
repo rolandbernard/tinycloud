@@ -174,7 +174,7 @@ window.addEventListener("load", async function () {
     });
 
     const uploadfile = document.getElementById("uploadfile");
-    uploadfile.addEventListener("click" , function () {
+    uploadfile.addEventListener("click", function () {
         fileupload.style.display = "block";
         // page.style.filter = "blur(0.5px)";
         page.style.pointerEvents = "none";
@@ -205,12 +205,19 @@ window.addEventListener("load", async function () {
 
     const fileupload = document.getElementById("fileupload");
     const fileuploadbox = document.getElementById("fileuploadbox");
+    let upload_enter_exit = 0;
     fileuploadbox.addEventListener("dragenter", function (event) {
         event.preventDefault();
-        fileuploadbox.classList.add("fileuploaddrag");
+        if (upload_enter_exit === 0) {
+            fileuploadbox.classList.add("fileuploaddrag");
+        }
+        upload_enter_exit++;
     });
-    fileuploadbox.addEventListener("dragexit", function () {
-        fileuploadbox.classList.remove("fileuploaddrag");
+    fileuploadbox.addEventListener("dragleave", function () {
+        upload_enter_exit--;
+        if (upload_enter_exit === 0) {
+            fileuploadbox.classList.remove("fileuploaddrag");
+        }
     });
     fileuploadbox.addEventListener("dragover", function (event) {
         event.preventDefault();
@@ -223,6 +230,7 @@ window.addEventListener("load", async function () {
         upload_files_folders_drop(uuid, Array.from(event.dataTransfer.items).filter(function (el) {
             return el.kind === "file";
         }));
+        upload_enter_exit = 0;
         fileuploadbox.classList.remove("fileuploaddrag");
         fileupload.style.display = "none";
         // page.style.filter = "none";
@@ -249,12 +257,19 @@ window.addEventListener("load", async function () {
 
     const fileupdate = document.getElementById("fileupdate");
     const fileupdatebox = document.getElementById("fileupdatebox");
+    let update_enter_exit = 0;
     fileupdatebox.addEventListener("dragenter", function (event) {
         event.preventDefault();
-        fileupdatebox.classList.add("fileuploaddrag");
+        if (update_enter_exit === 0) {
+            fileupdatebox.classList.add("fileuploaddrag");
+        }
+        update_enter_exit++;
     });
-    fileupdatebox.addEventListener("dragexit", function () {
-        fileupdatebox.classList.remove("fileuploaddrag");
+    fileupdatebox.addEventListener("dragleave", function () {
+        update_enter_exit--;
+        if (update_enter_exit === 0) {
+            fileupdatebox.classList.remove("fileuploaddrag");
+        }
     });
     fileupdatebox.addEventListener("dragover", function (event) {
         event.preventDefault();
@@ -265,6 +280,7 @@ window.addEventListener("load", async function () {
         update_file_input(entry.uuid, Array.from(event.dataTransfer.items).filter(function (el) {
             return el.kind === "file";
         })[0].getAsFile());
+        update_enter_exit = 0;
         fileupdatebox.classList.remove("fileuploaddrag");
         fileupdate.style.display = "none";
         // page.style.filter = "none";
@@ -290,7 +306,7 @@ window.addEventListener("load", async function () {
     const deletemp = document.getElementById("delete");
     deletemp.addEventListener("click", async function () {
         const entry = get_active_entry();
-        if(entry /*&& confirm("Delete this entry?")*/) {
+        if (entry /*&& confirm("Delete this entry?")*/) {
             await delete_entry(entry.data.uuid);
             update_root_view_content();
         }
@@ -299,7 +315,7 @@ window.addEventListener("load", async function () {
     const remove = document.getElementById("remove");
     remove.addEventListener("click", async function () {
         const entry = get_active_entry();
-        if(entry /*&& confirm("Remove this entry?")*/) {
+        if (entry /*&& confirm("Remove this entry?")*/) {
             await delete_entry(entry.data.shareuuid);
             update_root_view_content();
         }
@@ -308,9 +324,9 @@ window.addEventListener("load", async function () {
     const download = document.getElementById("download");
     download.addEventListener("click", async function () {
         const entry = get_active_entry();
-        if(entry) {
+        if (entry) {
             const token = await get_download_token(entry.data.uuid);
-            if(token) {
+            if (token) {
                 window.location.href = "/api/v1/download/" + token;
             }
         }
