@@ -139,6 +139,13 @@ function generate_entry(data, path_prefix) {
         node.addEventListener("dblclick", function (event) {
             change_path(node.path);
         });
+    } else {
+        node.addEventListener("dblclick", async function (event) {
+            const token = await get_download_token(data.uuid);
+            if(token) {
+                window.location.href = "/api/v1/download/" + token;
+            }
+        });
     }
     return node;
 }
