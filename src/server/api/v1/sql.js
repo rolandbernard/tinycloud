@@ -14,6 +14,7 @@ module.exports = {
     getentryusershare: fs.readFileSync(path.join(__dirname, "./sql/getentryusershare.sql"), "utf8"),
     getshareentry: fs.readFileSync(path.join(__dirname, "./sql/getshareentry.sql"), "utf8"),
     getentryallshare: fs.readFileSync(path.join(__dirname, "./sql/getentryallshare.sql"), "utf8"),
+    getentryparent: fs.readFileSync(path.join(__dirname, "./sql/getentryparent.sql"), "utf8"),
     getfiledata: fs.readFileSync(path.join(__dirname, "./sql/getfiledata.sql"), "utf8"),
     getfoldercontent: fs.readFileSync(path.join(__dirname, "./sql/getfoldercontent.sql"), "utf8"),
     getfolderdata: fs.readFileSync(path.join(__dirname, "./sql/getfolderdata.sql"), "utf8"),
@@ -32,5 +33,6 @@ module.exports = {
     updatefoldername: fs.readFileSync(path.join(__dirname, "./sql/updatefoldername.sql"), "utf8"),
     updateshareaccesslevel: fs.readFileSync(path.join(__dirname, "./sql/updateshareaccesslevel.sql"), "utf8"),
     updateuseravatar: fs.readFileSync(path.join(__dirname, "./sql/updateuseravatar.sql"), "utf8"),
-    updateuserpasswdhash: fs.readFileSync(path.join(__dirname, "./sql/updateuserpasswdhash.sql"), "utf8")
+    updateuserpasswdhash: fs.readFileSync(path.join(__dirname, "./sql/updateuserpasswdhash.sql"), "utf8"),
+    updateentryparent: fs.readFileSync(path.join(__dirname, "./sql/updateentryparent.sql"), "utf8")
 }

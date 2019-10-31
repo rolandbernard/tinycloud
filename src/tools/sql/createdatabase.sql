@@ -70,7 +70,7 @@ CREATE TABLE history (
     eyuuid BINARY(16) NOT NULL,
     uruuid BINARY(16) NOT NULL,
     hrdatetime DATETIME NOT NULL,
-    hrtype ENUM('create','rename','update') NOT NULL,
+    hrtype ENUM('create','rename','update', 'move') NOT NULL,
     FOREIGN KEY (eyuuid)
         REFERENCES entrys(eyuuid)
         ON DELETE CASCADE,
