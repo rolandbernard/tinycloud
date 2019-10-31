@@ -80,7 +80,7 @@ async function move_entry(entryuuid, parentuuid_or_null) {
     if (response.status !== 200) {
         return false;
     } else {
-        return false;
+        return true;
     }
 }
 

@@ -8,11 +8,11 @@ function get_active_entry() {
 function generate_entry(data, path_prefix) {
     const node = document.createElement("div");
     node.path = path_prefix.concat([{ name: data.name, uuid: data.uuid }]);
-    node.uuid = data.uuid;
+    node.uuid = (data.isshare ? data.shareuuid : data.uuid);
     node.data = data;
     node.drive_data = data;
     node.className = "entry";
-    node.id = "entry~" + data.uuid;
+    node.id = "entry~" + (data.isshare ? data.shareuuid : data.uuid);
     const nodeiconname = document.createElement("div");
     nodeiconname.classList.add("dirviewcell");
     nodeiconname.classList.add("entryiconname");
@@ -26,7 +26,7 @@ function generate_entry(data, path_prefix) {
         nodeexpand.appendChild(nodeexpandsvg);
         nodeexpand.addEventListener("click", function expand() {
             nodeexpandsvg.src = "/static/icon/expanded.svg";
-            generate_subdirview_with_loader(node, get_drive_data(data.uuid));
+            generate_subdirview_with_loader(node, get_drive_data((data.isshare ? data.shareuuid : data.uuid)));
             nodeexpand.removeEventListener("click", expand);
             nodeexpand.addEventListener("click", function collapse() {
                 nodeexpandsvg.src = "/static/icon/expand.svg";
@@ -127,7 +127,7 @@ function generate_entry(data, path_prefix) {
         event.just_set_active = true;
         set_active(node);
     });
-    if((!data.isshare && data.accesslevel.includes("d")) || (data.isshare && data.directaccesslevel.includes("d"))) {
+    if ((!data.isshare && data.accesslevel.includes("d")) || (data.isshare && data.directaccesslevel.includes("d"))) {
         node.draggable = true;
         node.addEventListener("dragstart", function (event) {
             event.dataTransfer.effectAllowed = "move";
@@ -142,7 +142,7 @@ function generate_entry(data, path_prefix) {
     } else {
         node.addEventListener("dblclick", async function (event) {
             const token = await get_download_token(data.uuid);
-            if(token) {
+            if (token) {
                 window.location.href = "/api/v1/download/" + token;
             }
         });
@@ -153,9 +153,9 @@ function generate_entry(data, path_prefix) {
 function generate_dirview(data, path) {
     const node = document.createElement("div");
     node.className = "dirview";
-    node.id = "dirview~" + (data.uuid || "root");
+    node.id = "dirview~" + ((data.isshare ? data.shareuuid: data.uuid) || "root");
     node.path = path;
-    node.uuid = (data.uuid || null);
+    node.uuid = ((data.isshare ? data.shareuuid: data.uuid) || null);
     node.data = data;
     if (path.length === 0 || data.accesslevel.includes("w")) {
         node.addEventListener("dragenter", function (event) {
@@ -322,7 +322,7 @@ async function update_dirview_recursively(node) {
         if (child.className === "subdirectory") {
             const child_dirview = child.childNodes[0];
             const child_data = data.content.find(function (el) {
-                return el.uuid === child_dirview.uuid;
+                return (el.isshare ? el.shareuuid : el.uuid) === child_dirview.uuid;
             });
             if (child_data) {
                 update_dirview_recursively(child_dirview);
@@ -331,7 +331,7 @@ async function update_dirview_recursively(node) {
             }
         } else {
             const child_data = data.content.find(function (el) {
-                return el.uuid === child.uuid;
+                return (el.isshare ? el.shareuuid : el.uuid) === child.uuid;
             });
             if (child_data) {
                 update_entry(child, child_data);
@@ -342,13 +342,13 @@ async function update_dirview_recursively(node) {
     });
     data.content.forEach(function (el) {
         const child = childs.find(function (child) {
-            return el.uuid === child.uuid;
+            return (el.isshare ? el.shareuuid : el.uuid) === child.uuid;
         });
         if (!child) {
             const prev_child = childs.find(function (child) {
                 return child.className !== "subdirectory" && el.isfolder >= child.data.isfolder && el.name < child.data.name;
             });
-            if(prev_child) {
+            if (prev_child) {
                 node.insertBefore(generate_entry(el, node.path), prev_child);
             } else {
                 node.appendChild(generate_entry(el, node.path));
