@@ -78,7 +78,7 @@
 }
 
 .entry {
-    padding: 0.5em 0 0.5em 0;
+    padding: 0.4em 0 0.4em 0;
     border-top: 1px solid lightgrey;
     /* border-top: 1px solid lightgray;
     margin-top: -1px; */
@@ -100,13 +100,12 @@
 .dirviewcell {
     display: block;
     white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: visible; /* TOFIX */
+    overflow: visible; 
     margin: auto;
 }
 
 .entryiconname {
-    width: 100%;
+    width: 0;
     height: 1.2em;
     flex: 1 1 auto;
     display: flex;
@@ -135,8 +134,12 @@
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
     padding-left: 0.75em;
-    width: 100%;
     flex: 1 1 auto;
+    width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 1.25em;
+    margin-top: 0.125em;
 }
 
 .entrydetails {
@@ -148,6 +151,9 @@
     flex: 0 0 auto;
     overflow: hidden;
     height: 1.25em;
+    margin-top: 0.3em;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .dirviewheadercell {
@@ -160,7 +166,7 @@
 }
 
 #dirviewname {
-    width: 100%;
+    width: 0;
     flex: 1 1 auto;
 }
 
