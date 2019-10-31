@@ -213,12 +213,11 @@ app.post("/:uuid", async function (req, res) {
                         res.status(200).end();
                     } else {
                         const [accessnewrows, accessnewfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.body.newparent });
-                        const [entryrows, entryfields] = await db.promise().query(sql.getentryinfo, { entryuuid: req.params.uuid });
                         const [parentrows, parentfields] = await db.promise().query(sql.getentryinfo, { entryuuid: req.body.newparent });
-                        if (accessnewrows.length === 0 || entryrows.length === 0 || parentrows.length === 0) {
+                        if (accessnewrows.length === 0 || parentrows.length === 0) {
                             res.status(404).end();
                         } else if (accessnewrows[0].accesslevel.includes("w")) {
-                            const [cyclerows, cyclefields] = await db.promise().query(sql.getentryparent, { entryuuid: parentrows[0].uuid, parentuuid: entryrows[0].uuid });
+                            const [cyclerows, cyclefields] = await db.promise().query(sql.getentryparent, { entryuuid: parentrows[0].uuid, parentuuid: req.params.uuid });
                             if (cyclerows.length === 0) {
                                 await db.promise().query(sql.updateentryparent, { entryuuid: req.params.uuid, parentuuid: req.body.newparent, useruuid: (req.token !== undefined ? req.token.uuid : null) });
                                 res.status(200).end();
@@ -327,17 +326,11 @@ app.put("/:uuid", async function (req, res) {
                     } else if (typeof (req.body.shareentryuuid) === "string") {
                         const [sharerows, sharefields] = await db.promise().query(sql.getbestentryshare, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.body.shareentryuuid });
                         if (sharerows.length >= 1) {
-                            const [entryrows, entryfields] = await db.promise().query(sql.getentryinfo, { entryuuid: req.body.shareentryuuid });
-                            const [cyclerows, cyclefields] = await db.promise().query(sql.getentryparent, { entryuuid: parentrows[0].uuid, parentuuid: entryrows[0].uuid });
-                            if (cyclerows.length === 0) {
-                                const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
-                                await db.promise().query(sql.insertsharelinkentry, { uuid: uuidrows[0].uuid, parentuuid: parentrows[0].uuid, shareuuid: sharerows[0].uuid, useruuid: (req.token !== undefined ? req.token.uuid : null) });
-                                res.status(200).json({
-                                    uuid: uuidrows[0].uuid
-                                });
-                            } else {
-                                res.status(400).end();
-                            }
+                            const [uuidrows, uuidfields] = await db.promise().query(sql.getuuid);
+                            await db.promise().query(sql.insertsharelinkentry, { uuid: uuidrows[0].uuid, parentuuid: parentrows[0].uuid, shareuuid: sharerows[0].uuid, useruuid: (req.token !== undefined ? req.token.uuid : null) });
+                            res.status(200).json({
+                                uuid: uuidrows[0].uuid
+                            });
                         } else {
                             res.status(401).end();
                         }

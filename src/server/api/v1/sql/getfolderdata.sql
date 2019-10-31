@@ -19,6 +19,7 @@ WITH RECURSIVE resolved_entrys (oreyuuid, eyuuid, sheyuuid, eypath) AS (
             LEFT JOIN shares AS sh ON (sl.shuuid = sh.shuuid)
             LEFT JOIN files AS fl ON (ey.eyuuid = fl.eyuuid)
             LEFT JOIN folders AS fd ON (ey.eyuuid = fd.eyuuid)
+        WHERE re.oreyuuid != ey.eyuuid
 )
 SELECT  re.eypath AS filepath,
         fl.fldata AS filedata
