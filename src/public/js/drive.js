@@ -68,8 +68,28 @@ async function delete_entry(uuid) {
     }
 }
 
-function rename_entry(uuid) {
-
+async function rename_entry(uuid, name) {
+    const token = get_token();
+    const object = {
+        newname: name
+    };
+    try {
+        const response = await fetch("/api/v1/drive/" + uuid, {
+            method: "POST",
+            headers: new Headers({
+                "Authorization": ("Bearer " + token),
+                "Content-Type": "application/json"
+            }),
+            body: JSON.stringify(object)
+        });
+        if (response.status !== 200) {
+            return false;
+        } else {
+            return true;
+        }
+    } catch (err) {
+        return false;
+    }
 }
 
 async function update_file(uuid, file) {
