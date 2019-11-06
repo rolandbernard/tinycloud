@@ -31,8 +31,10 @@ app.use(function (err, req, res, next) {
     res.status(500).end();
 });
 
-http.createServer(app).listen(config.ports.http);
-https.createServer({
+const options = {
     key: config.keys.private,
     cert: config.keys.public
-}, app).listen(config.ports.https);
+};
+
+http.createServer(app).listen(config.ports.http);
+https.createServer(options, app).listen(config.ports.https);
