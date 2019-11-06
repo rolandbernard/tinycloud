@@ -1,11 +1,12 @@
 
+DROP DATABASE IF EXISTS :databasename;
 CREATE DATABASE :databasename;
 
 USE :databasename;
 
 CREATE TABLE users (
     uruuid BINARY(16) NOT NULL PRIMARY KEY,
-    uruname TEXT NOT NULL UNIQUE,
+    uruname TEXT NOT NULL,
     urpasswdhash CHAR(60) NOT NULL,
     uravatar BLOB
 );
