@@ -135,8 +135,18 @@
                     <label id="fileuploadlable" for="fileuploadin">
                         <div class="choosefile">Choose a file</div>
                     </label>
-                    <div class="fileuploadinginfo"></div>
                 </div>
+            </form>
+        </div>
+        <div id="foldernew" style="display: none;">
+            <form id="foldernewform" enctype="multipart/form-data">
+                <div id="foldernewclose" class="close">
+                    <img class="closesvg" src="/static/icon/clear.svg" />
+                </div>
+                <div id="foldernewtext">Foldername</div>
+                <input id="foldername" type="text" name="foldername" >
+                <input id="foldernewerror" type="text"/>
+                <input id="folernewsubmit" type="submit" value="Create Folder">
             </form>
         </div>
         <div id="fileupdate" style="display: none;">
@@ -149,7 +159,6 @@
                     <label id="fileupdatelable" for="fileupdatein">
                         <div class="choosefile">Choose a file</div>
                     </label>
-                    <div class="fileuploadinginfo"></div>
                 </div>
             </form>
         </div>

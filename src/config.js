@@ -8,8 +8,8 @@ module.exports = {
     },
     db: {
         host: "localhost",
-        user: "root",
-        password: "root",
+        user: "tiny",
+        password: "tiny",
         database: "tinycloud"
     },
     saltrounds: 10,

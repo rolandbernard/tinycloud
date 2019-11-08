@@ -2,24 +2,24 @@ Analyse
 =======
 
 ## 1. General Information
-Wir haben keine eigens Unternehmen, wir sind nur Teil einer Schulklasse, der aufgetragen wurde Teams zu bilden. <br>
+Wir haben kein eigenes Unternehmen, wir sind nur Teil einer Schulklasse, der aufgetragen wurde Teams zu bilden. <br>
 Unser Team besteht aus:
 - Roland Bernard
 - Benjamin Herbst<br>
 
-Konkurenz haben wir direkt keine Konkurenz, nur die anderen Teams unserer Klasse, 
+Wir haben keine direkte Konkurenz, nur die anderen Teams unserer Klasse, 
 falls man diese als Konkurenz bezeichen kann. Wir wissen nähmlich nicht genau in welcher Form sie diese 
 Aufgabe vor haben umzusetzten.
 
 ## 2. New Project / Redesign
 Dies ist ein komplett neues Projekt und wir haben zur Zeit keine bestehende derartige
-Webanwendung. Wir haben zwar einige private Websiten, aber keine welche ein solche aufrabe haben.
+Webanwendung. Wir haben zwar einige private Websiten, aber keine welche eine solche aufgabe hat.
 
 ## 3. Expectations
 - Es wird erwarted, dass die Kunden die Webanwendung als, ein Tool nutzen, um ihre 
-Dateien sicher und zuferlässig abspeichern und überall abrufen zu können.
+Dateien sicher und zuverlässig abspeichern und überall abrufen zu können.
 - Dies könnte von Kunden die sowohl im Büro als auch von Zuhause aus arbeiten
-interessant sein, da jene kunden öfters Dateien in mehreren orten zugänglich haben wollten.
+interessant sein, da jene Kunden öfters Dateien in mehreren orten zugänglich haben wollten.
 
 
 ## 4. Type of Website

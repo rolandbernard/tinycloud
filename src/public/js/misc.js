@@ -173,10 +173,19 @@ window.addEventListener("load", async function () {
         window.addEventListener("dblclick", handl);
     });
 
+    const foldernew = document.getElementById("foldernew");
+    const newfolder = document.getElementById("newfolder");
+    newfolder.addEventListener("click", function () {
+        foldernew.style.display = "block";
+        // page.style.filter = "blur(1px)";
+        page.style.pointerEvents = "none";
+    });
+
+    const fileupload = document.getElementById("fileupload");
     const uploadfile = document.getElementById("uploadfile");
     uploadfile.addEventListener("click", function () {
         fileupload.style.display = "block";
-        // page.style.filter = "blur(0.5px)";
+        // page.style.filter = "blur(1px)";
         page.style.pointerEvents = "none";
     });
 
@@ -203,7 +212,6 @@ window.addEventListener("load", async function () {
         user_logout();
     });
 
-    const fileupload = document.getElementById("fileupload");
     const fileuploadbox = document.getElementById("fileuploadbox");
     let upload_enter_exit = 0;
     fileuploadbox.addEventListener("dragenter", function (event) {
@@ -301,6 +309,29 @@ window.addEventListener("load", async function () {
         fileupdate.style.display = "none";
         // page.style.filter = "none";
         page.style.pointerEvents = "all";
+    });
+
+    const foldernewclose = document.getElementById("foldernewclose");
+    foldernewclose.addEventListener("click", function () {
+        foldernew.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+    });
+
+    const foldernewform = document.getElementById("foldernewclose");
+    const foldernewinput = document.getElementById("folername");
+    const foldernewerror = document.getElementById("folernewerror");
+    const foldernewsubmit = document.getElementById("folernewsubmit");
+    foldernewform.addEventListener( "submit",  function (event) {
+        event.preventDefault();
+        foldernewinput.disabled = true;
+        foldernewsubmit.disabled = true;
+        const name = foldernewinput;
+
+        if (name != ""){
+
+        }
+
     });
 
     const deletemp = document.getElementById("delete");
