@@ -326,12 +326,15 @@ window.addEventListener("load", async function () {
         event.preventDefault();
         foldernewinput.disabled = true;
         foldernewsubmit.disabled = true;
-        const name = foldernewinput;
 
-        if (name != ""){
-
+        if (foldernewinput === ""){
+            foldernewerror.appendChild(document.createTextNode("Enter a Foldername"))
+        }else{
+            new_folder(get_current_path(), foldernewinput)
         }
 
+        foldernewinput.disabled = false;
+        foldernewsubmit.disabled = false;
     });
 
     const deletemp = document.getElementById("delete");
