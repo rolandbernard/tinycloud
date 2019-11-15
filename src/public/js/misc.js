@@ -330,7 +330,8 @@ window.addEventListener("load", async function () {
         if (foldernewinput === ""){
             foldernewerror.appendChild(document.createTextNode("Enter a Foldername"))
         }else{
-            new_folder(get_current_path(), foldernewinput)
+            new_folder(null, "Hans");
+            update_root_view_content();
         }
 
         foldernewinput.disabled = false;
