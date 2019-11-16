@@ -316,24 +316,33 @@ window.addEventListener("load", async function () {
         foldernew.style.display = "none";
         // page.style.filter = "none";
         page.style.pointerEvents = "all";
+        foldernewinput.value = "";
+        delete_all_childs(foldernewerror);
     });
 
-    const foldernewform = document.getElementById("foldernewclose");
-    const foldernewinput = document.getElementById("folername");
-    const foldernewerror = document.getElementById("folernewerror");
-    const foldernewsubmit = document.getElementById("folernewsubmit");
-    foldernewform.addEventListener( "submit",  function (event) {
+    const foldernewform = document.getElementById("foldernewform");
+    const foldernewinput = document.getElementById("foldername");
+    const foldernewerror = document.getElementById("foldernewerror");
+    const foldernewsubmit = document.getElementById("foldernewsubmit");
+    foldernewform.addEventListener("submit", async function (event) {
         event.preventDefault();
         foldernewinput.disabled = true;
         foldernewsubmit.disabled = true;
-
-        if (foldernewinput === ""){
-            foldernewerror.appendChild(document.createTextNode("Enter a Foldername"))
+        const newfoldername = foldernewinput.value;
+        delete_all_childs(foldernewerror);
+        if (newfoldername === ""){
+            foldernewerror.appendChild(document.createTextNode("Enter a foldername"));
         }else{
-            new_folder(null, "Hans");
+            const entry = get_active_entry();
+            const path = get_current_path();
+            const uuid = (entry !== null ? (entry.path.length > 1 ? entry.path[entry.path.length - 2].uuid : null) : (path.length > 0 ? path[path.length - 1].uuid : null));
+            await new_folder(uuid, newfoldername);
             update_root_view_content();
+            foldernew.style.display = "none";
+            // page.style.filter = "none";
+            page.style.pointerEvents = "all";
+            foldernewinput.value = "";
         }
-
         foldernewinput.disabled = false;
         foldernewsubmit.disabled = false;
     });

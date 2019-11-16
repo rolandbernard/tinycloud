@@ -41,20 +41,6 @@
             <div id="rootdirectory">
             </div>
         </div>
-        <div id="login" style="display: none;">
-            <form name="login" id="loginform">
-                <div id="signinheader">Sign in</div>
-                <div class="infotext">Username</div>
-                <input id="username" name="username" type="text" autocomplete="off" />
-                <div class="infotext">Password</div>
-                <input id="password" name="password" type="password" />
-                <div id="infotexterror" class="infotext"></div>
-                <div id="rememberall"><input id="rememberme" type="checkbox" />
-                    <div id="remembertext">Remember me</div>
-                </div>
-                <input id="signin" type="submit" value="Sign in" />
-            </form>
-        </div>
         <div id="initialloader" class="loaderellipsis">
             <div></div>
             <div></div>
@@ -125,6 +111,20 @@
         </div>
     </div>
     <div id="overlays">
+        <div id="login" style="display: none;">
+            <form name="login" id="loginform">
+                <div id="signinheader">Sign in</div>
+                <div class="infotext">Username</div>
+                <input id="username" name="username" type="text" autocomplete="off" />
+                <div class="infotext">Password</div>
+                <input id="password" name="password" type="password" />
+                <div id="infotexterror" class="infotext"></div>
+                <div id="rememberall"><input id="rememberme" type="checkbox" />
+                    <div id="remembertext">Remember me</div>
+                </div>
+                <input id="signin" type="submit" value="Sign in" />
+            </form>
+        </div>
         <div id="fileupload" style="display: none;">
             <form id="fileuploadform" enctype="multipart/form-data">
                 <div id="fileuploadclose" class="close">
@@ -144,9 +144,9 @@
                     <img class="closesvg" src="/static/icon/clear.svg" />
                 </div>
                 <div id="foldernewtext">Foldername</div>
-                <input id="foldername" type="text" name="foldername" >
+                <input id="foldername" type="text" name="foldername" autocomplete="off" >
                 <div id="foldernewerror"></div>
-                <input id="folernewsubmit" type="submit" value="Create Folder">
+                <input id="foldernewsubmit" type="submit" value="Create Folder">
             </form>
         </div>
         <div id="fileupdate" style="display: none;">
@@ -166,4 +166,5 @@
         </div>
     </div>
 </body>
+
 </html>
