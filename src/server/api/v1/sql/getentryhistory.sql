@@ -19,4 +19,5 @@ SELECT  NVL(ur.uruname, 'guest') AS user,
         JOIN resolved_entrys AS re ON (ey.eyuuid = re.eyuuid)
         LEFT JOIN history AS hr ON (hr.eyuuid = ey.eyuuid)
         LEFT JOIN users AS ur ON (ur.uruuid = hr.uruuid)
-    WHERE re.sheyuuid IS NULL;
+    WHERE re.sheyuuid IS NULL
+    ORDER BY hr.hrdatetime DESC;
