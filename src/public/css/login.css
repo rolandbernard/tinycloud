@@ -31,6 +31,11 @@
     border: 1px solid lightgray;
     border-radius: 0.2em;
     box-sizing: border-box;
+    background: none;
+}
+
+#signin {
+    background: #F5F6F7;
 }
 
 #username:focus, #password:focus {

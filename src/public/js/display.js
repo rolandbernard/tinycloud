@@ -139,11 +139,11 @@ function generate_entry(data, path_prefix) {
         });
     }
     if (data.isfolder) {
-        node.addEventListener("dblclick", function (event) {
+        node.addEventListener("dblclick", function () {
             change_path(node.path);
         });
     } else {
-        node.addEventListener("dblclick", async function (event) {
+        node.addEventListener("dblclick", async function () {
             const token = await get_download_token(data.uuid);
             if (token) {
                 window.location.href = "/api/v1/download/" + token;
@@ -248,6 +248,7 @@ function unset_all_active() {
     Array.from(elements).forEach(function (el) {
         el.classList.remove("entryactive");
     });
+    active_entry = null;
 }
 
 function set_displayed_path(path) {
@@ -381,4 +382,5 @@ function update_entry(oldnode, data) {
     nodelastmodified.appendChild(document.createTextNode(generate_lastmodified_string(data.lastmodifieddatetime, data.lastmodifieduser)));
     delete_all_childs(nodefilesize);
     nodefilesize.appendChild(document.createTextNode(generate_filesize_string(data.filesize)));
+    oldnode.data = data;
 }

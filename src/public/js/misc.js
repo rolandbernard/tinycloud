@@ -311,7 +311,9 @@ window.addEventListener("load", async function () {
         page.style.pointerEvents = "all";
     });
 
+    const foldernewerror = document.getElementById("foldernewerror");
     const foldernewclose = document.getElementById("foldernewclose");
+    const foldernewinput = document.getElementById("foldername");
     foldernewclose.addEventListener("click", function () {
         foldernew.style.display = "none";
         // page.style.filter = "none";
@@ -321,8 +323,6 @@ window.addEventListener("load", async function () {
     });
 
     const foldernewform = document.getElementById("foldernewform");
-    const foldernewinput = document.getElementById("foldername");
-    const foldernewerror = document.getElementById("foldernewerror");
     const foldernewsubmit = document.getElementById("foldernewsubmit");
     foldernewform.addEventListener("submit", async function (event) {
         event.preventDefault();
@@ -345,6 +345,39 @@ window.addEventListener("load", async function () {
         }
         foldernewinput.disabled = false;
         foldernewsubmit.disabled = false;
+    });
+
+    const renameentry = document.getElementById("renameentry");
+    const renameentryerror = document.getElementById("renameentryerror");
+    const renameentryclose = document.getElementById("renameentryclose");
+    renameentryclose.addEventListener("click", function () {
+        renameentry.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+        delete_all_childs(renameentryerror);
+    });
+
+    const renameentryform = document.getElementById("renameentryform");
+    const renameentryinput = document.getElementById("renameentrynewname");
+    const renameentrysubmit = document.getElementById("renameentrysubmit");
+    renameentryform.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        renameentryinput.disabled = true;
+        renameentrysubmit.disabled = true;
+        const newname = renameentryinput.value;
+        delete_all_childs(renameentryerror);
+        if (newname === ""){
+            renameentryerror.appendChild(document.createTextNode("Enter a name"));
+        }else{
+            const entry = get_active_entry();
+            await rename_entry(entry.uuid, newname);
+            update_root_view_content();
+            renameentry.style.display = "none";
+            // page.style.filter = "none";
+            page.style.pointerEvents = "all";
+        }
+        renameentryinput.disabled = false;
+        renameentrysubmit.disabled = false;
     });
 
     const deletemp = document.getElementById("delete");
@@ -381,6 +414,15 @@ window.addEventListener("load", async function () {
         fileupdate.style.display = "block";
         // page.style.filter = "blur(0.5px)";
         page.style.pointerEvents = "none";
+    });
+
+    const rename = document.getElementById("rename");
+    rename.addEventListener("click", async function () {
+        renameentry.style.display = "block";
+        // page.style.filter = "blur(0.5px)";
+        page.style.pointerEvents = "none";
+        const entry = get_active_entry();
+        renameentryinput.value = entry.data.name;
     });
 
     const explorer = document.getElementById("explorer");
