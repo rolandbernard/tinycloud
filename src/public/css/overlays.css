@@ -1,7 +1,8 @@
 #fileuploadform,
 #fileupdateform,
 #foldernewform,
-#renameentryform {
+#renameentryform,
+#entryhistorybox {
     left: 50%;
     top: 40%;
     transform: translate(-50%, -50%);
@@ -92,6 +93,96 @@
 #foldername:focus,
 #renameentrynewname:focus {
     box-shadow: 0 0 0.5em 0 #44a6c6;
+}
+
+#entryhistorylist {
+    display: flex;
+    flex-flow: column;
+    max-height: 50vh;
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+#entryhistorylist::-webkit-scrollbar {
+  width: 0;
+}
+
+#entryhistorybox {
+    padding: 0.75em;
+}
+
+.historyentry, #historyheader {
+    flex: 0 0 auto;
+    display: flex;
+}
+
+.historyheadercell {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    color: #777777;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.historycell {
+    flex: 1 1 auto;
+    width: 0;
+    height: 1.25em;
+    margin-top: 0.125em;
+    position: relative;
+}
+
+.historyuseravatar {
+    position: absolute;
+    display: block;
+    width: 1.75em;
+    height: 1.75em;
+    border-radius: 50%;
+    margin-top: -0.275em;
+}
+
+.historyactionicon {
+    position: absolute;
+    display: block;
+    width: 1.4em;
+    height: 1.4em;
+    margin-top: -0.1em;
+}
+
+.historyactiontext, .historyusername, .historycelldate {
+    display: inline-block;
+    white-space: nowrap;
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 0.25em;
+}
+
+.historycelldate {
+    margin-top: 0.5em;
+}
+
+.historyusername {
+    margin-left: 2.75em;
+}
+
+.historyactiontext {
+    margin-left: 2.25em;
+}
+
+.historyheadercell, .historycell {
+    width: 15vw;
+}
+
+#historyheader {
+    padding: 0.5em 0 0.5em 0.25em;
+}
+
+.historyentry {
+    padding: 0.4em 0 0.4em 0.25em;
+    border-top: 1px solid lightgray;
 }
 
 .close {

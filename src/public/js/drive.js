@@ -188,6 +188,21 @@ function add_sharelink(uuid_or_null, sharedentryuuid) {
 
 }
 
-function get_entry_history(uuid) {
-
+async function get_entry_history(uuid) {
+    const token = get_token();
+    try {
+        const response = await fetch("/api/v1/drive/" + uuid + "/history", {
+            method: "GET",
+            headers: new Headers({
+                "Authorization": ("Bearer " + token),
+            })
+        });
+        if (response.status !== 200) {
+            return false;
+        } else {
+            return await response.json();
+        }
+    } catch (err) {
+        return false;
+    }
 }

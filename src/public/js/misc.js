@@ -380,6 +380,14 @@ window.addEventListener("load", async function () {
         renameentrysubmit.disabled = false;
     });
 
+    const entryhistory = document.getElementById("entryhistory");
+    const entryhistoryclose = document.getElementById("entryhistoryclose");
+    entryhistoryclose.addEventListener("click", function () {
+        entryhistory.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+    });
+
     const deletemp = document.getElementById("delete");
     deletemp.addEventListener("click", async function () {
         const entry = get_active_entry();
@@ -416,13 +424,22 @@ window.addEventListener("load", async function () {
         page.style.pointerEvents = "none";
     });
 
+    const history = document.getElementById("history");
+    history.addEventListener("click", async function () {
+        const entry = get_active_entry();
+        generate_history_content(await get_entry_history(entry.uuid));
+        entryhistory.style.display = "block";
+        // page.style.filter = "blur(0.5px)";
+        page.style.pointerEvents = "none";
+    });
+
     const rename = document.getElementById("rename");
     rename.addEventListener("click", async function () {
+        const entry = get_active_entry();
+        renameentryinput.value = entry.data.name;
         renameentry.style.display = "block";
         // page.style.filter = "blur(0.5px)";
         page.style.pointerEvents = "none";
-        const entry = get_active_entry();
-        renameentryinput.value = entry.data.name;
     });
 
     const explorer = document.getElementById("explorer");
@@ -446,8 +463,10 @@ window.addEventListener("load", async function () {
             user_logout();
         }
     });
+    setInterval(attemt_extention, 60*1000);
 });
 
 window.addEventListener("contextmenu", function (event) {
     event.preventDefault();
 });
+

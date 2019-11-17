@@ -285,15 +285,19 @@ function generate_owner_string(owner) {
     }
 }
 
-function generate_lastmodified_string(datetime, user) {
+function generate_datetime_string(datetime) {
     const d = new Date(datetime);
     let now_minus_one = new Date();
     now_minus_one.setDate(now_minus_one.getDate() - 1);
     if (d.getTime() > now_minus_one.getTime()) {
-        return d.toLocaleTimeString() + ", " + generate_owner_string(user);
+        return d.toLocaleTimeString();
     } else {
-        return d.toLocaleDateString() + ", " + generate_owner_string(user);
+        return d.toLocaleDateString();
     }
+}
+
+function generate_lastmodified_string(datetime, user) {
+    return generate_datetime_string(datetime) + ", " + generate_owner_string(user);
 }
 
 function generate_filesize_string(filesize) {
@@ -384,3 +388,51 @@ function update_entry(oldnode, data) {
     nodefilesize.appendChild(document.createTextNode(generate_filesize_string(data.filesize)));
     oldnode.data = data;
 }
+
+function generate_history_content(data) {
+    const historylist = document.getElementById("entryhistorylist");
+    delete_all_childs(historylist);
+    data.forEach(function (el) {
+        historylist.appendChild(generate_history_entry(el));
+    });
+}
+
+function generate_history_entry(data) {
+    const node = document.createElement("div");
+    node.className = "historyentry";
+    const nodeuser = document.createElement("div");
+    nodeuser.className = "historycell";
+    const nodeuseravatar = document.createElement("img");
+    nodeuseravatar.className = "historyuseravatar";
+    nodeuseravatar.src = "/api/v1/user/" + encodeURI(data.user) + "/avatar";
+    nodeuser.appendChild(nodeuseravatar);
+    const nodeusertext = document.createElement("div");
+    nodeusertext.className = "historyusername";
+    nodeusertext.appendChild(document.createTextNode(data.user));
+    nodeuser.appendChild(nodeusertext);
+    node.appendChild(nodeuser);
+    const nodedate = document.createElement("div");
+    nodedate.classList.add("historycell");
+    nodedate.classList.add("historycelldate");
+    nodedate.appendChild(document.createTextNode(generate_datetime_string(data.datetime)));
+    node.appendChild(nodedate);
+    const actiontofile = {
+        "create":"upload.svg",
+        "rename":"edit.svg",
+        "move":"move.svg",
+        "update":"update.svg",
+    };
+    const nodeaction = document.createElement("div");
+    nodeaction.className = "historycell";
+    const nodeactionicon = document.createElement("img");
+    nodeactionicon.className = "historyactionicon";
+    nodeactionicon.src = "/static/icon/" + actiontofile[data.action];
+    nodeaction.appendChild(nodeactionicon);
+    const nodeactiontext = document.createElement("div");
+    nodeactiontext.className = "historyactiontext";
+    nodeactiontext.appendChild(document.createTextNode(data.action));
+    nodeaction.appendChild(nodeactiontext);
+    node.appendChild(nodeaction);
+    return node;
+}
+

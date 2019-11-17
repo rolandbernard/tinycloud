@@ -53,7 +53,7 @@ async function is_loggedin() {
                     "Authorization": ("Bearer " + token)
                 })
             });
-            if (response.status !== 200) {
+            if (response.status === 401) {
                 sessionStorage.removeItem("token");
                 sessionStorage.removeItem("username");
                 return false;
