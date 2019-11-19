@@ -17,6 +17,6 @@ SELECT  BIN_TO_UUID(sh.shuuid) AS uuid,
         sh.shaccesslevel AS accesslevel
     FROM entrys AS ey
         JOIN resolved_entrys AS re ON (ey.eyuuid = re.eyuuid)
-        LEFT JOIN shares AS sh ON (sh.eyuuid = ey.eyuuid)
-        LEFT JOIN users AS ur ON (ur.uruuid = sh.uruuid)
+        JOIN shares AS sh ON (sh.eyuuid = ey.eyuuid)
+        JOIN users AS ur ON (ur.uruuid = sh.uruuid)
     WHERE re.sheyuuid IS NULL;
