@@ -141,6 +141,7 @@ function generate_entry(data, path_prefix) {
     if (data.isfolder) {
         node.addEventListener("dblclick", function () {
             change_path(node.path);
+            history.pushState({ path: node.path }, "Tinycloud", "?path=" + encodeURI(JSON.stringify(node.path)));
         });
     } else {
         node.addEventListener("dblclick", async function () {
@@ -260,6 +261,7 @@ function set_displayed_path(path) {
     node.src = "/static/icon/home.svg";
     node.addEventListener("click", function () {
         change_path([]);
+        history.pushState({ path: [] }, "Tinycloud", "?path=" + encodeURI(JSON.stringify([])));
     });
     pathdiv.appendChild(node);
     path.forEach(function (seg) {
@@ -271,6 +273,7 @@ function set_displayed_path(path) {
         const path_prefix = path.slice(0, path.indexOf(seg) + 1);
         node.addEventListener("click", function () {
             change_path(path_prefix);
+            history.pushState({ path: path_prefix }, "Tinycloud", "?path=" + encodeURI(JSON.stringify(path_prefix)));
         });
         node.appendChild(document.createTextNode(seg.name));
         pathdiv.appendChild(node);

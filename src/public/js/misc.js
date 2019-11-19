@@ -25,7 +25,12 @@ function user_login(username) {
     node.id = "useravatar";
     node.src = "/api/v1/user/" + encodeURI(username) + "/avatar";
     user.appendChild(node);
-    change_path([]);
+    const path_json = (new URL(window.location.href)).searchParams.get("path");
+    if (path_json) {
+        change_path(JSON.parse(path_json));
+    } else {
+        change_path([]);
+    }
     setInterval(async function () {
         if(!await attemt_extention()) {
             user_logout();
@@ -118,6 +123,14 @@ async function upload_files_folders_drop(uuid_or_null, files) {
     await update_root_view_content();
     upload_end();
 }
+
+window.addEventListener("popstate", function (event) {
+    if (event.state && event.state.path) {
+        change_path(event.state.path);
+    } else {
+        change_path([]);
+    }
+});
 
 window.addEventListener("load", async function () {
     const page = document.getElementById("page");

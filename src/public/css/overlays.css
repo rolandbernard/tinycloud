@@ -99,6 +99,7 @@
     max-height: 50vh;
     overflow: scroll;
     scrollbar-width: none;
+    min-width: 1.125em;
 }
 
 #entryhistorylist::-webkit-scrollbar {
