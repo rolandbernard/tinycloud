@@ -13,12 +13,12 @@ falls man diese als Konkurenz bezeichen kann. Wir wissen nähmlich nicht genau
 in welcher Form sie diese Aufgabe vor haben umzusetzten.
 
 ## 2. New Project / Redesign
-Dies ist ein komplett neues Projekt und wir haben zur Zeit keine bestehende 
-derartige Webanwendung. Wir haben zwar einige private Websiten, aber keine 
+Dies ist ein komplett neues Projekt und wir haben zur Zeit keine bestehende
+derartige Webanwendung. Wir haben zwar einige private Websiten, aber keine
 welche eine solche aufgabe hat.
 
 ## 3. Expectations
-- Es wird erwarted, dass die Kunden die Webanwendung als, ein Tool nutzen, um 
+- Es wird erwarted, dass die Kunden die Webanwendung als, ein Tool nutzen, um
 ihre Dateien sicher und zuverlässig abspeichern und überall abrufen zu können.
 - Dies könnte von Kunden die sowohl im Büro als auch von Zuhause aus arbeiten
 interessant sein, da jene Kunden öfters Dateien in mehreren orten zugänglich
@@ -45,7 +45,7 @@ nicht aufgefordert sich anzumelden.
 Verschiedene Informationen werden in diesen beiden Seiten mithilfe von
 AJAX-Abfragen angefragen und ein bzw. mithilfe von Javascript ausgeblendet
 werden.
-Die wich die Darstellung der Ordnerstrucktur, 
+Die wichtigste Ansicht ist die Darstellung der Ordnerstrucktur, 
 welche die zentrale Ansicht beider Seiten ist. Hier werden die Ordner und
 Dateien angezeigt. Für jeden Ordenr und für jede Datei wird angezeigt wem der
 Ordner, bzw. die Datei, gehört und wann und von wem diese zu letzt geändert
@@ -60,12 +60,27 @@ mit einer REST-API zur Verfügung gestellt, auf welche das Client-Seitige
 Javascript zugreift.
 
 ## 7. Functionalities
-Die Webanwendung soll die Möglichkeit bieten Dateien hochzuladen und in Ordnern
-zu organisieren, um sie an einem späteren Moment wieder Herunterlagen zu können.
-Die Funktionalität ist also mit einer Webanwendung wie Google Drive oder MEGA
-vergleichbar. Allerdings wird die Webseite einfacher gehalten sein und keine
-zusätzlichen Funktionalitäten neben dem Abspeichern von Dateien und Ordnern zur
-verfügung stellen. Zudem werden die Daten auf einem eigenen Server gelagert und
+Die Webanwendung hat folgende Funktionaliäten:
+- Die möglichkeit Dateien einfach per Knopfdruck Hochladen und wieder Herunterzuladen
+- Das Hochladen wird weiters durch die möglichkeit per Drag-and-Drop Dateien Hochzuladen, vereinfacht
+- Das Herunterladen von Dateien ist auch per Doppelklick möglich, was den Downloadvorgang weiter vereinfacht
+- Eine Drag-and-Drop Funktion, um Dateien einfach Verschieben und Organisieren zu können
+- Ein Neuer-Ordner Knopf, mit dem man mit zwei Klicks einen neuen Ordner erstellen kann
+- Die einzelnen Ordner auf- und zuzuklappen um eine bessere Übersicht über die Ordnerstruktur zu erhalten
+- Es können auch die Vor- und Zurückknöpfe vom Browser genutzt werden um durch die Ordnerstruktur zu navigieren
+- Die möglichkeit Ordner eines Benutzers für andere Benutzer freizugeben, um gemeinsam am Inhalt arbeiten zu können  
+- Sich Anzumelden, um die sichere Verwarung der Daten zu sichern
+- Sich Abzumelden, um ungebetene einblicke in die privaten Daten zu verhindern  
+- Seinen Profil-Avatar zu setzten und später wieder zu verändern
+- Sein Password im nachhinein zu verändern, um die Sicherheit es Benutzer-Accounts zu gewährleisten
+- Es ist beim Navigieren möglich, in Unterordner hineinzunavigieren, um ungewolltes auszublenden
+- Es ist möglich, wenn man sich ein einem Unterordner befindet, sich den Pfad anzeigen zu lassen, mit diesem kann
+zuglich auch durch die bereits besuchte Ordnerstruktur navigiert werden
+- Neben den einzelnen Dateien werden auch noch Dateigröße, letztes Änderungsdatum und Überordner angezeigt
+
+Die Funktionalität ist also mit Webanwendung wie Google Drive oder MEGA
+vergleichbar.
+Zudem werden die Daten auf einem eigenen Server gelagert und
 nicht an Drittunternehmen weitergeleitet.
 
 ## 8. Budget
