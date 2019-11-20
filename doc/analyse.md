@@ -50,6 +50,8 @@ welche die zentrale Ansicht beider Seiten ist. Hier werden die Ordner und
 Dateien angezeigt. Für jeden Ordenr und für jede Datei wird angezeigt wem der
 Ordner, bzw. die Datei, gehört und wann und von wem diese zu letzt geändert
 wurde. Für Dateien wird zudem noch die Dateigröße angezeigt.
+Eine weitere Ansicht ist die anzeige des Verlaufes der Änderungen eines Ordners
+odner einer Datei.
 
 ## 6. Static or Dynamic
 Unsere Webanwendung ist dynamisch, da es sich um eine Sigle Page Application
