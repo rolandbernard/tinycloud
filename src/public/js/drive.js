@@ -37,7 +37,7 @@ async function get_download_token(uuid) {
     }
 }
 
-function get_shares(uuid) {
+async function get_shares(uuid) {
     const token = get_token();
     try {
         const response = await fetch("/api/v1/drive/" + uuid + "/share", {
@@ -56,7 +56,7 @@ function get_shares(uuid) {
     }
 }
 
-function post_share(uuid, username_or_null, accesslevel) {
+async function post_share(uuid, username_or_null, accesslevel) {
     const token = get_token();
     let object;
     if (username_or_null) {
@@ -88,7 +88,7 @@ function post_share(uuid, username_or_null, accesslevel) {
     }
 }
 
-function delete_share(uuid) {
+async function delete_share(uuid) {
     const token = get_token();
     try {
         const response = await fetch("/api/v1/drive/share/" + uuid, {
@@ -242,8 +242,28 @@ async function upload_file(uuid_or_null, file) {
     }
 }
 
-function add_sharelink(uuid_or_null, sharedentryuuid) {
-
+async function add_sharelink(uuid_or_null, sharedentryuuid) {
+    const token = get_token();
+    const object = {
+        sharedentryuuid: sharedentryuuid
+    };
+    try {
+        const response = await fetch("/api/v1/drive/" + (uuid_or_null || ""), {
+            method: "PUT",
+            headers: new Headers({
+                "Authorization": ("Bearer " + token),
+                "Content-Type": "application/json"
+            }),
+            body: JSON.stringify(object)
+        });
+        if (response.status !== 200) {
+            return false;
+        } else {
+            return await response.json();
+        }
+    } catch (err) {
+        return false;
+    }
 }
 
 async function get_entry_history(uuid) {
