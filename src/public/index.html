@@ -199,6 +199,20 @@
                     </div>
                 </div>
             </div>
+
+            <div id="passwordchange" style="display: none;">
+                <form id="passwordchangeform" enctype="multipart/form-data">
+                    <div id="passwordchangeclose" class="close">
+                        <img class="closesvg" src="/static/icon/clear.svg" />
+                    </div>
+                    <div id="passwordchangetext">Foldername</div>
+                    <input id="newpassword" type="text" name="newpassword" autocomplete="off" >
+                    <input id="newpasswordrepeat" type="text" name="newpasswordrepeat" autocomplete="off" >
+                    <div id="passwordchangeerror"></div>
+                    <input id="passwordchangesubmit" type="submit" value="Change Password">
+                </form>
+            </div>
+
             <div id="uploadloading" style="display: none;">
             </div>
         </div>

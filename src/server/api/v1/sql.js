@@ -35,4 +35,4 @@ module.exports = {
     updateuseravatar: fs.readFileSync(path.join(__dirname, "./sql/updateuseravatar.sql"), "utf8"),
     updateuserpasswdhash: fs.readFileSync(path.join(__dirname, "./sql/updateuserpasswdhash.sql"), "utf8"),
     updateentryparent: fs.readFileSync(path.join(__dirname, "./sql/updateentryparent.sql"), "utf8")
-}
+};

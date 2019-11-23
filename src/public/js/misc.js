@@ -228,6 +228,61 @@ window.addEventListener("load", async function () {
         window.addEventListener("contextmenu", handl);
         window.addEventListener("dblclick", handl);
     });
+    const changepasswordclose = document.getElementById("passwordchangeclose");
+    const changepasswordinput = document.getElementById("newpassword");
+    const changepasswordinputrepeat = document.getElementById("newpasswordrepeat");
+    const changepassworderror = document.getElementById("passwordchangeerror");
+    changepasswordclose.addEventListener("click", function () {
+        changepassword.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+        changepasswordinput.value = "";
+        changepasswordinputrepeat.value = "";
+        delete_all_childs(changepassworderror);
+    });
+
+
+    const changepassword = document.getElementById("passwordchange")
+    changepassword.addEventListener("click", function () {
+        changepassword.style.display = "block";
+        // page.style.filter = "blur(1px)";
+        page.style.pointerEvents = "none";
+    });
+
+
+    const changepasswordform = document.getElementById("passwordchangeform");
+    const changepasswordsubmit =  document.getElementById("passwordchangesubmit");
+    changepasswordform.addEventListener("submit", async function f() {
+        event.preventDefault();
+        changepasswordinput.disabled = true;
+        changepasswordinputrepeat.disabled = true;
+        changepasswordsubmit.disabled = true;
+
+        const newPassword = changepasswordinput.value;
+        const newPasswordRepeat = changepasswordinputrepeat.value;
+
+        delete_all_childs(changepassworderror);
+
+        if (newPassword === "" || newPasswordRepeat === "") {
+            changepassworderror.appendChild(document.createTextNode("Enter a new Password"));
+        }else{
+            if (newPassword !== newPasswordRepeat){
+                changepassworderror.appendChild(document.createTextNode("The two Passwords have to match"));
+            }else{
+                await change_password(newPassword);
+                changepassword.style.display = "none";
+                // page.style.filter = "none";
+                page.style.pointerEvents = "all";
+                changepasswordinput.value = "";
+                changepasswordinputrepeat.value = "";
+            }
+        }
+        changepasswordinput.disabled = false;
+        changepasswordinputrepeat.disabled = false;
+        changepasswordsubmit.disabled = false;
+    });
+
+
 
     const avatarchange = document.getElementById("avatarchange");
     const avatarchangeinput = document.getElementById("avatarchangein");
