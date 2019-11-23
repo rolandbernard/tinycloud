@@ -1,5 +1,6 @@
 #fileuploadform,
 #fileupdateform,
+#avatarchangeform,
 #foldernewform,
 #renameentryform,
 #entryhistorybox {
@@ -20,17 +21,35 @@
 }
 
 #fileuploadlable,
-#fileupdatelable {
+#fileupdatelable,
+#avatarchange {
     font-family: "Roboto Mono", monospace;
     font-size: 1em;
 }
 
 #fileuploadbox,
-#fileupdatebox {
+#fileupdatebox,
+#avatarchangebox {
     white-space: nowrap;
     display: block;
     padding: 4em;
     border: 1px dashed lightgray;
+}
+
+#avatarchangebox {
+    border: none;
+}
+
+#avatarchangeerror {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.85em;
+    color: red;
+    height: 0.85em;
+    position: absolute;
+    left: -50%;
+    margin-left: 50%;
+    bottom: 2.25em;
+    padding-left: 3.25em;
 }
 
 .fileuploaddrag {
@@ -38,17 +57,20 @@
 }
 
 #fileuploadlable:hover .choosefile,
-#fileupdatelable:hover .choosefile {
+#fileupdatelable:hover .choosefile,
+#avatarchangelable:hover .choosefile {
     color: #44a6c6;
 }
 
 #fileuploadlable:hover,
-#fileupdatelable:hover {
+#fileupdatelable:hover,
+#avatarchangelable:hover {
     cursor: pointer;
 }
 
 #fileupdatein,
-#fileuploadin {
+#fileuploadin,
+#avatarchangein {
     display: none;
 }
 
@@ -97,7 +119,8 @@
 
 #entryhistorylist {
     max-height: 50vh;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     scrollbar-width: none;
     min-width: 1.125em;
 }

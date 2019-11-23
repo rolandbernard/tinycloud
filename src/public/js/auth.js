@@ -147,3 +147,25 @@ async function change_password(password) {
         return false;
     }
 }
+
+async function change_avatar(file) {
+    const token = get_token();
+    const data = new FormData();
+    data.append("file", file);
+    try {
+        const response = await fetch("/api/v1/user/avatar", {
+            method: "POST",
+            headers: new Headers({
+                "Authorization": ("Bearer " + token)
+            }),
+            body: data
+        });
+        if (response.status !== 200) {
+            return false;
+        } else {
+            return true;
+        }
+    } catch (err) {
+        return false;
+    }
+}

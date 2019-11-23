@@ -171,6 +171,20 @@
                     </div>
                 </form>
             </div>
+            <div id="avatarchange" style="display: none;">
+                <form id="avatarchangeform" enctype="multipart/form-data">
+                    <div id="avatarchangeclose" class="close">
+                        <img class="closesvg" src="/static/icon/clear.svg" />
+                    </div>
+                    <div id="avatarchangebox">
+                        <input type="file" name="file" id="avatarchangein" accept="image/jpeg,image/png,image/tiff,image/x-tiff,image/gif,image/svg+xml,image/webp" />
+                        <label id="avatarchangelable" for="avatarchangein">
+                            <div class="choosefile">Choose a image</div>
+                        </label>
+                        <div id="avatarchangeerror"></div>
+                    </div>
+                </form>
+            </div>
             <div id="entryhistory" style="display: none;">
                 <div id="entryhistorybox">
                     <div id="entryhistoryclose" class="close">

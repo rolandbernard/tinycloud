@@ -124,6 +124,15 @@ async function upload_files_folders_drop(uuid_or_null, files) {
     upload_end();
 }
 
+async function upload_change_avatar(file) {
+    upload_start();
+    await change_avatar(file);
+    const useravatar = document.getElementById("useravatar");
+    const username = get_username();
+    useravatar.src = "/api/v1/user/" + encodeURI(username) + "/avatar?time=" + Date.now();
+    upload_end();
+}
+
 window.addEventListener("popstate", function (event) {
     if (event.state && event.state.path) {
         change_path(event.state.path);
@@ -218,6 +227,45 @@ window.addEventListener("load", async function () {
         window.addEventListener("click", handl);
         window.addEventListener("contextmenu", handl);
         window.addEventListener("dblclick", handl);
+    });
+
+    const avatarchange = document.getElementById("avatarchange");
+    const avatarchangeinput = document.getElementById("avatarchangein");
+    const avatarchangeerror = document.getElementById("avatarchangeerror");
+    const avatar_supported_types = {
+        "image/png":true,
+        "image/jpeg":true,
+        "image/gif":true,
+        "image/svg+xml":true,
+        "image/tiff":true,
+        "image/x-tiff":true,
+        "image/webp":true,
+    };
+    avatarchangeinput.addEventListener("change", function () {
+        const file = avatarchangeinput.files[0];
+        delete_all_childs(avatarchangeerror);
+        if (avatar_supported_types[file.type]) {
+            upload_change_avatar(avatarchangeinput.files[0]);
+            avatarchange.style.display = "none";
+            // page.style.filter = "none";
+            page.style.pointerEvents = "all";
+        } else {
+            avatarchangeerror.appendChild(document.createTextNode("The file must be an image"));
+        }
+    });
+
+    const avatarchangeclose = document.getElementById("avatarchangeclose");
+    avatarchangeclose.addEventListener("click", function () {
+        avatarchange.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+    });
+
+    const changeavatar = document.getElementById("changeavatar");
+    changeavatar.addEventListener("click", function () {
+        avatarchange.style.display = "block";
+        // page.style.filter = "blur(0.5px)";
+        page.style.pointerEvents = "none";
     });
 
     const logout = document.getElementById("logout");
