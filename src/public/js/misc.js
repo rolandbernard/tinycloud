@@ -479,10 +479,12 @@ window.addEventListener("load", async function () {
         delete_all_childs(renameentryerror);
         if (newname === ""){
             renameentryerror.appendChild(document.createTextNode("Enter a name"));
-        }else{
+        } else {
             const entry = get_active_entry();
-            await rename_entry(entry.uuid, newname);
-            update_root_view_content();
+            if (entry.data.name !== newname) {
+                await rename_entry(entry.uuid, newname);
+                update_root_view_content();
+            }
             renameentry.style.display = "none";
             // page.style.filter = "none";
             page.style.pointerEvents = "all";
