@@ -7,7 +7,7 @@ USE :databasename;
 
 CREATE TABLE users (
     uruuid BINARY(16) NOT NULL PRIMARY KEY,
-    uruname TEXT NOT NULL,
+    uruname TEXT NOT NULL UNIQUE,
     urpasswdhash CHAR(60) NOT NULL,
     uravatar BLOB
 );
@@ -81,7 +81,7 @@ CREATE TABLE history (
         ON DELETE CASCADE
 );
 
-CREATE FUNCTION bin_to_uuid(_bin BINARY(16)) 
+CREATE FUNCTION bin_to_uuid(_bin BINARY(16))
     RETURNS CHAR(36)
     LANGUAGE SQL  DETERMINISTIC  CONTAINS SQL  SQL SECURITY INVOKER
 RETURN
