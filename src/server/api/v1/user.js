@@ -47,7 +47,11 @@ app.post("/avatar", async function (req, res) {
     if (req.token !== undefined) {
         if (req.files !== undefined) {
             try {
-                const avatar = await sharp(req.files.file.data).resize(128).png().toBuffer();
+                const avatar = await sharp(req.files.file.data).resize(128, 128, {
+                    fit: "contain",
+                }).png({
+                    compressionLevel: 9,
+                }).toBuffer();
                 try {
                     await db.promise().query(sql.updateuseravatar, { avatar: avatar, useruuid: req.token.uuid });
                     res.status(200).end();
