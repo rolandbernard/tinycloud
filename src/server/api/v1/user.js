@@ -95,7 +95,8 @@ app.get("/:username", async function (req, res) {
         if (rows.length === 0) {
             res.status(404).end();
         } else {
-            res.status(302).end();
+            res.status(200);
+            res.json(rows[0].uuid);
         }
     } catch (err) {
         console.error(err);
