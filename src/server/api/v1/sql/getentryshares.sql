@@ -20,4 +20,4 @@ SELECT  BIN_TO_UUID(sh.shuuid) AS uuid,
         JOIN shares AS sh ON (sh.eyuuid = ey.eyuuid)
         LEFT JOIN users AS ur ON (ur.uruuid = sh.uruuid)
     WHERE re.sheyuuid IS NULL
-    ORDER BY sh.shaccesslevel;
+    ORDER BY user;
