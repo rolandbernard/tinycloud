@@ -3,7 +3,8 @@
 #avatarchangeform,
 #foldernewform,
 #renameentryform,
-#entryhistorybox {
+#entryhistorybox,
+#passwordchangeform {
     left: 50%;
     top: 40%;
     transform: translate(-50%, -50%);
@@ -75,7 +76,8 @@
 }
 
 #foldername, #foldernewsubmit,
-#renameentrynewname, #renameentrysubmit  {
+#renameentrynewname, #renameentrysubmit,
+#newpassword, #newpasswordrepeat, #passwordchangesubmit {
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
     display: block;
@@ -90,12 +92,14 @@
 }
 
 #foldernewsubmit,
-#renameentrysubmit {
+#renameentrysubmit,
+#passwordchangesubmit {
     background: #F5F6F7;
 }
 
 #foldernewtext,
-#renameentrytext {
+#renameentrytext,
+#passwordchangetext, #passwordchangetextrepeat {
     font-family: "Roboto Mono", monospace;
     font-size: 0.75em;
     margin: 0.5em;
@@ -103,7 +107,8 @@
 }
 
 #foldernewerror,
-#renameentryerror {
+#renameentryerror,
+#passwordchangeerror {
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
     color: red;
@@ -113,7 +118,8 @@
 }
 
 #foldername:focus,
-#renameentrynewname:focus {
+#renameentrynewname:focus,
+#newpassword:focus, #newpasswordrepeat:focus {
     box-shadow: 0 0 0.5em 0 #44a6c6;
 }
 

@@ -228,61 +228,49 @@ window.addEventListener("load", async function () {
         window.addEventListener("contextmenu", handl);
         window.addEventListener("dblclick", handl);
     });
-    const changepasswordclose = document.getElementById("passwordchangeclose");
-    const changepasswordinput = document.getElementById("newpassword");
-    const changepasswordinputrepeat = document.getElementById("newpasswordrepeat");
-    const changepassworderror = document.getElementById("passwordchangeerror");
-    changepasswordclose.addEventListener("click", function () {
-        changepassword.style.display = "none";
+
+    const passwordchange = document.getElementById("passwordchange")
+    const passwordchangeclose = document.getElementById("passwordchangeclose");
+    const passwordchangeinput = document.getElementById("newpassword");
+    const passwordchangeinputrepeat = document.getElementById("newpasswordrepeat");
+    const passwordchangeerror = document.getElementById("passwordchangeerror");
+    passwordchangeclose.addEventListener("click", function () {
+        passwordchange.style.display = "none";
         // page.style.filter = "none";
         page.style.pointerEvents = "all";
-        changepasswordinput.value = "";
-        changepasswordinputrepeat.value = "";
-        delete_all_childs(changepassworderror);
+        passwordchangeinput.value = "";
+        passwordchangeinputrepeat.value = "";
+        delete_all_childs(passwordchangeerror);
     });
 
-
-    const changepassword = document.getElementById("passwordchange")
-    changepassword.addEventListener("click", function () {
-        changepassword.style.display = "block";
-        // page.style.filter = "blur(1px)";
-        page.style.pointerEvents = "none";
-    });
-
-
-    const changepasswordform = document.getElementById("passwordchangeform");
-    const changepasswordsubmit =  document.getElementById("passwordchangesubmit");
-    changepasswordform.addEventListener("submit", async function f() {
+    const passwordchangeform = document.getElementById("passwordchangeform");
+    const passwordchangesubmit =  document.getElementById("passwordchangesubmit");
+    passwordchangeform.addEventListener("submit", async function f() {
         event.preventDefault();
-        changepasswordinput.disabled = true;
-        changepasswordinputrepeat.disabled = true;
-        changepasswordsubmit.disabled = true;
-
-        const newPassword = changepasswordinput.value;
-        const newPasswordRepeat = changepasswordinputrepeat.value;
-
-        delete_all_childs(changepassworderror);
-
-        if (newPassword === "" || newPasswordRepeat === "") {
-            changepassworderror.appendChild(document.createTextNode("Enter a new Password"));
-        }else{
-            if (newPassword !== newPasswordRepeat){
-                changepassworderror.appendChild(document.createTextNode("The two Passwords have to match"));
-            }else{
-                await change_password(newPassword);
-                changepassword.style.display = "none";
+        passwordchangeinput.disabled = true;
+        passwordchangeinputrepeat.disabled = true;
+        passwordchangesubmit.disabled = true;
+        const new_password = passwordchangeinput.value;
+        const new_password_repeat = passwordchangeinputrepeat.value;
+        delete_all_childs(passwordchangeerror);
+        if (new_password === "" || new_password_repeat === "") {
+            passwordchangeerror.appendChild(document.createTextNode("Enter a new password"));
+        } else {
+            if (new_password !== new_password_repeat){
+                passwordchangeerror.appendChild(document.createTextNode("The two passwords have to match"));
+            } else {
+                await change_password(new_password);
+                passwordchange.style.display = "none";
                 // page.style.filter = "none";
                 page.style.pointerEvents = "all";
-                changepasswordinput.value = "";
-                changepasswordinputrepeat.value = "";
+                passwordchangeinput.value = "";
+                passwordchangeinputrepeat.value = "";
             }
         }
-        changepasswordinput.disabled = false;
-        changepasswordinputrepeat.disabled = false;
-        changepasswordsubmit.disabled = false;
+        passwordchangeinput.disabled = false;
+        passwordchangeinputrepeat.disabled = false;
+        passwordchangesubmit.disabled = false;
     });
-
-
 
     const avatarchange = document.getElementById("avatarchange");
     const avatarchangeinput = document.getElementById("avatarchangein");
@@ -320,6 +308,13 @@ window.addEventListener("load", async function () {
     changeavatar.addEventListener("click", function () {
         avatarchange.style.display = "block";
         // page.style.filter = "blur(0.5px)";
+        page.style.pointerEvents = "none";
+    });
+
+    const changepassword = document.getElementById("changepassword");
+    changepassword.addEventListener("click", function () {
+        passwordchange.style.display = "block";
+        // page.style.filter = "blur(1px)";
         page.style.pointerEvents = "none";
     });
 
