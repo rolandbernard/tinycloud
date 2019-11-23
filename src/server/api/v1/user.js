@@ -24,17 +24,25 @@ function send_data(req, res, data) {
 
 app.get("/:username/avatar", async function (req, res) {
     try {
-        const [rows, fields] = await db.promise().query(sql.getuseravatar, { username: req.params.username });
-        if (rows.length === 0) {
-            res.status(404).end();
+        if (req.params.username === "all") {
+            res.setHeader("Content-Type", "image/png");
+            res.sendFile(path.join(__dirname, "../../../public/avatarall.png"));
+        } else if (req.params.username == "guest") {
+            res.setHeader("Content-Type", "image/png");
+            res.sendFile(path.join(__dirname, "../../../public/avatarplaceholder.png"));
         } else {
-            res.status(200);
-            if (rows[0].avatar === null) {
-                res.setHeader("Content-Type", "image/png");
-                res.sendFile(path.join(__dirname, "../../../public/avatarplaceholder.png"));
+            const [rows, fields] = await db.promise().query(sql.getuseravatar, { username: req.params.username });
+            if (rows.length === 0) {
+                res.status(404).end();
             } else {
-                res.setHeader("Content-Type", "image/png");
-                send_data(req, res, rows[0].avatar);
+                res.status(200);
+                if (rows[0].avatar === null) {
+                    res.setHeader("Content-Type", "image/png");
+                    res.sendFile(path.join(__dirname, "../../../public/avatarplaceholder.png"));
+                } else {
+                    res.setHeader("Content-Type", "image/png");
+                    send_data(req, res, rows[0].avatar);
+                }
             }
         }
     } catch (err) {
