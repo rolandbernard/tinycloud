@@ -141,6 +141,10 @@ window.addEventListener("popstate", function (event) {
     }
 });
 
+window.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+});
+
 window.addEventListener("load", async function () {
     const page = document.getElementById("page");
     const loginform = document.getElementById("loginform");
@@ -501,6 +505,92 @@ window.addEventListener("load", async function () {
         page.style.pointerEvents = "all";
     });
 
+    const entryshares = document.getElementById("entryshares");
+    const entrysharesclose = document.getElementById("entrysharesclose");
+    entrysharesclose.addEventListener("click", function () {
+        entryshares.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+    });
+
+    const sharesnew = document.getElementById("sharesnew");
+    const newshares = document.getElementById("newshares");
+    const sharesnewusername = document.getElementById("sharesnewusername");
+    const sharesnewaccessextend = document.getElementById("sharesnewaccessextend");
+    newshares.addEventListener("click", async function () {
+        sharesnewusername.value = "";
+        sharesnewaccessextend.style.width = "1.75em";
+        sharesnew.style.display = "block";
+        // entryshares.style.filter = "blur(0.5px)";
+        entryshares.style.pointerEvents = "none";
+    });
+
+    const entryshareslinka = document.getElementById("entryshareslinka");
+    entryshareslinka.addEventListener("contextmenu", function (event) {
+        event.stopPropagation();
+    });
+
+    const sharesnewclose = document.getElementById("sharesnewclose");
+    const sharesnewerror = document.getElementById("sharesnewerror");
+    sharesnewclose.addEventListener("click", function () {
+        delete_all_childs(sharesnewerror);
+        sharesnew.style.display = "none";
+        // page.style.filter = "none";
+        entryshares.style.pointerEvents = "all";
+    });
+
+    const sharesnewform = document.getElementById("sharesnewform");
+    sharesnewform.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        sharesnewusername.disabled = true;
+        sharesnewsubmit.disabled = true;
+        const widthtoaccess = {
+            "1.75em":"r",
+            "3.5em":"rw",
+            "5.25em":"rwd",
+        };
+        const username = sharesnewusername.value;
+        const accesslevel = widthtoaccess[sharesnewaccessextend.style.width];
+        delete_all_childs(sharesnewerror);
+        if (username === ""){
+            const entry = get_active_entry();
+            post_share(entry.uuid, null, accesslevel).then(async function () {
+                generate_shares_content(await get_shares(entry.uuid), entry.uuid);
+            });
+            sharesnew.style.display = "none";
+            // page.style.filter = "none";
+            entryshares.style.pointerEvents = "all";
+        } else {
+            const uuid = await get_useruuid(username);
+            if (uuid) {
+                const entry = get_active_entry();
+                post_share(entry.uuid, uuid, accesslevel).then(async function () {
+                    generate_shares_content(await get_shares(entry.uuid), entry.uuid);
+                });
+                sharesnew.style.display = "none";
+                // page.style.filter = "none";
+                entryshares.style.pointerEvents = "all";
+            } else {
+                sharesnewerror.appendChild(document.createTextNode("This user does not exist"));
+            }
+        }
+        sharesnewusername.disabled = false;
+        sharesnewsubmit.disabled = false;
+    });
+
+    const sharesnewaccessiconview = document.getElementById("sharesnewaccessiconview");
+    sharesnewaccessiconview.addEventListener("click", function () {
+        sharesnewaccessextend.style.width = "1.75em";
+    });
+    const sharesnewaccessiconwrite = document.getElementById("sharesnewaccessiconwrite");
+    sharesnewaccessiconwrite.addEventListener("click", function () {
+        sharesnewaccessextend.style.width = "3.5em";
+    });
+    const sharesnewaccessicondelete = document.getElementById("sharesnewaccessicondelete");
+    sharesnewaccessicondelete.addEventListener("click", function () {
+        sharesnewaccessextend.style.width = "5.25em";
+    });
+
     const deletemp = document.getElementById("delete");
     deletemp.addEventListener("click", async function () {
         const entry = get_active_entry();
@@ -546,6 +636,15 @@ window.addEventListener("load", async function () {
         page.style.pointerEvents = "none";
     });
 
+    const sharewith = document.getElementById("sharewith");
+    sharewith.addEventListener("click", async function () {
+        const entry = get_active_entry();
+        generate_shares_content(await get_shares(entry.uuid), entry.uuid);
+        entryshares.style.display = "block";
+        // page.style.filter = "blur(0.5px)";
+        page.style.pointerEvents = "none";
+    });
+
     const rename = document.getElementById("rename");
     rename.addEventListener("click", async function () {
         const entry = get_active_entry();
@@ -577,9 +676,5 @@ window.addEventListener("load", async function () {
         }
     });
     setInterval(attemt_extention, 60*1000);
-});
-
-window.addEventListener("contextmenu", function (event) {
-    event.preventDefault();
 });
 

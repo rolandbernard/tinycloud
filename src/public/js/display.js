@@ -190,7 +190,7 @@ function generate_dirview(data, path) {
         node.addEventListener("drop", function (event) {
             event.preventDefault();
             event.stopPropagation();
-            const drag_data = JSON.parse(event.dataTransfer.getData("application/json"));
+            const drag_data = JSON.parse(event.dataTransfer.getData("application/json") || "null");
             if (drag_data && drag_data.entryuuid && drag_data.entryuuid.length === 36) {
                 if (drag_data.parentuuid !== data.uuid) {
                     move_entry(drag_data.entryuuid, data.uuid).then(function () {
@@ -441,6 +441,90 @@ function generate_history_entry(data) {
     nodeactiontext.className = "historyactiontext";
     nodeactiontext.appendChild(document.createTextNode(data.action));
     nodeaction.appendChild(nodeactiontext);
+    node.appendChild(nodeaction);
+    return node;
+}
+
+function generate_shares_content(data, entryuuid) {
+    const shareslist = document.getElementById("entryshareslist");
+    const linka = document.getElementById("entryshareslinka");
+    delete_all_childs(linka);
+    const link = window.location.origin + "/share/" + entryuuid;
+    linka.appendChild(document.createTextNode(link));
+    linka.href = link;
+    delete_all_childs(shareslist);
+    data.forEach(function (el) {
+        shareslist.appendChild(generate_shares_entry(el));
+    });
+}
+
+function generate_shares_entry(data) {
+    const node = document.createElement("div");
+    node.className = "sharesentry";
+    const nodeuser = document.createElement("div");
+    nodeuser.className = "sharescell";
+    const nodeuseravatar = document.createElement("img");
+    nodeuseravatar.className = "sharesuseravatar";
+    nodeuseravatar.src = "/api/v1/user/" + encodeURI(data.user) + "/avatar";
+    nodeuser.appendChild(nodeuseravatar);
+    const nodeusertext = document.createElement("div");
+    nodeusertext.className = "sharesusername";
+    nodeusertext.appendChild(document.createTextNode(data.user));
+    nodeuser.appendChild(nodeusertext);
+    node.appendChild(nodeuser);
+    const nodeaccess = document.createElement("div");
+    nodeaccess.className = "sharescell";
+    const nodeaccessexpand = document.createElement("div");
+    nodeaccessexpand.className = "sharesaccessextend";
+    const accesstowidth = {
+        "r":"1.75em",
+        "rw":"3.5em",
+        "rwd":"5.25em",
+    };
+    nodeaccessexpand.style.width = accesstowidth[data.accesslevel];
+    nodeaccess.appendChild(nodeaccessexpand);
+    const nodeaccessview = document.createElement("img");
+    nodeaccessview.className = "sharesaccessicon";
+    nodeaccessview.src = "/static/icon/view.svg";
+    nodeaccess.appendChild(nodeaccessview);
+    const nodeaccessedit = document.createElement("img");
+    nodeaccessedit.className = "sharesaccessicon";
+    nodeaccessedit.src = "/static/icon/edit.svg";
+    nodeaccess.appendChild(nodeaccessedit);
+    const nodeaccessdelete = document.createElement("img");
+    nodeaccessdelete.className = "sharesaccessicon";
+    nodeaccessdelete.src = "/static/icon/delete.svg";
+    nodeaccess.appendChild(nodeaccessdelete);
+    node.appendChild(nodeaccess);
+    const nodeaction = document.createElement("div");
+    nodeaction.classList.add("sharescell");
+    nodeaction.classList.add("sharesactioncell");
+    const nodeactionedit = document.createElement("input");
+    const entryshares = document.getElementById("entryshares");
+    const sharesnew = document.getElementById("sharesnew");
+    const sharesnewusername = document.getElementById("sharesnewusername");
+    const sharesnewaccessextend = document.getElementById("sharesnewaccessextend");
+    nodeactionedit.addEventListener("click", async function () {
+        sharesnewusername.value = (data.user === "all" ? "" : data.user);
+        sharesnewaccessextend.style.width = accesstowidth[data.accesslevel];
+        sharesnew.style.display = "block";
+        // entryshares.style.filter = "blur(0.5px)";
+        entryshares.style.pointerEvents = "none";
+    });
+    nodeactionedit.className = "sharesedit";
+    nodeactionedit.type = "button";
+    nodeactionedit.value = "Edit";
+    nodeaction.appendChild(nodeactionedit);
+    const nodeactiondelete = document.createElement("input");
+    const entry = get_active_entry();
+    nodeactiondelete.addEventListener("click", async function () {
+        delete_share(data.uuid);
+        generate_shares_content(await get_shares(entry.uuid), entry.uuid);
+    });
+    nodeactiondelete.className = "sharesdelete";
+    nodeactiondelete.type = "button";
+    nodeactiondelete.value = "Delete";
+    nodeaction.appendChild(nodeactiondelete);
     node.appendChild(nodeaction);
     return node;
 }

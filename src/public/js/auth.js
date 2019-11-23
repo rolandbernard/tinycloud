@@ -169,3 +169,24 @@ async function change_avatar(file) {
         return false;
     }
 }
+
+async function get_useruuid(username) {
+    const token = get_token();
+    if (token !== null) {
+        try {
+            const response = await fetch("/api/v1/user/" + username, {
+                method: "GET",
+            });
+            if (response.status !== 200) {
+                return false;
+            } else {
+                return await response.json();
+            }
+        } catch (err) {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+

@@ -4,7 +4,9 @@
 #foldernewform,
 #renameentryform,
 #entryhistorybox,
-#passwordchangeform {
+#entrysharesbox,
+#passwordchangeform,
+#sharesnewform {
     left: 50%;
     top: 40%;
     transform: translate(-50%, -50%);
@@ -77,7 +79,8 @@
 
 #foldername, #foldernewsubmit,
 #renameentrynewname, #renameentrysubmit,
-#newpassword, #newpasswordrepeat, #passwordchangesubmit {
+#newpassword, #newpasswordrepeat, #passwordchangesubmit,
+#sharesnewusername, #sharesnewsubmit {
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
     display: block;
@@ -93,13 +96,22 @@
 
 #foldernewsubmit,
 #renameentrysubmit,
-#passwordchangesubmit {
+#passwordchangesubmit,
+#sharesnewsubmit {
     background: #F5F6F7;
+}
+
+#foldernewsubmit:hover,
+#renameentrysubmit:hover,
+#passwordchangesubmit:hover,
+#sharesnewsubmit:hover {
+    cursor: pointer;
 }
 
 #foldernewtext,
 #renameentrytext,
-#passwordchangetext, #passwordchangetextrepeat {
+.passwordchangetext,
+.sharesnewtext {
     font-family: "Roboto Mono", monospace;
     font-size: 0.75em;
     margin: 0.5em;
@@ -108,7 +120,8 @@
 
 #foldernewerror,
 #renameentryerror,
-#passwordchangeerror {
+#passwordchangeerror,
+#sharesnewerror {
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
     color: red;
@@ -119,25 +132,89 @@
 
 #foldername:focus,
 #renameentrynewname:focus,
-#newpassword:focus, #newpasswordrepeat:focus {
+#newpassword:focus, #newpasswordrepeat:focus,
+#sharesnewusername:focus {
     box-shadow: 0 0 0.5em 0 #44a6c6;
 }
 
-#entryhistorylist {
+#sharesnewaccess {
+    position: relative;
+    margin: auto;
+    width: min-content;
+    white-space: nowrap;
+}
+
+#sharesnewaccessiconview, #sharesnewaccessiconwrite, #sharesnewaccessicondelete {
+    display: inline-block;
+    width: 1.25em;
+    height: 1.25em;
+    margin-right: 0.5em;
+    vertical-align: middle;
+}
+
+#sharesnewaccessiconview:hover, #sharesnewaccessiconwrite:hover, #sharesnewaccessicondelete:hover {
+    cursor: pointer;
+}
+
+#sharesnewaccessextend {
+    background: #44a6c6;;
+    position: absolute;
+    width: 1.75em;
+    height: 1.7em;
+    z-index: -10;
+    border-radius: 0.85em;
+    top: -0.25em;
+    left: -0.25em;
+}
+
+#entryhistorylist,
+#entryshareslist {
     max-height: 50vh;
     overflow-y: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
-    min-width: 1.125em;
+    min-height: 1.125em;
+    max-width: 90vw;
 }
 
-#entryhistorylist::-webkit-scrollbar {
+#entryhistorylist {
+    width: 45em;
+}
+
+#entryshareslist {
+    width: 30em;
+}
+
+#entryhistorylist::-webkit-scrollbar,
+#entryshareslist::-webkit-scrollbar {
   width: 0;
 }
 
-#entryhistorybox {
+#entryhistorybox,
+#entrysharesbox {
     padding: 0.75em;
-    max-width: 90vw;
+}
+
+#entryshareslink {
+    margin: 0.25em;
+    margin-bottom: 0.5em;
+    white-space: nowrap;
+    max-width: 80vw;
+}
+
+#entryshareslinktext {
+    display: inline;
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+}
+
+#entryshareslink a {
+    display: inline;
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    color: blue;
+    text-decoration: underline;
+    overflow: scroll;
 }
 
 .historyentry, #historyheader {
@@ -145,7 +222,13 @@
     grid-template-columns: repeat(3, 33.3%);
 }
 
-.historyheadercell {
+.sharesentry, #sharesheader {
+    display: grid;
+    grid-template-columns: 40% 20% 40%;
+}
+
+.historyheadercell,
+.sharesheadercell {
     font-family: "Roboto Mono", monospace;
     font-size: 0.75em;
     color: #777777;
@@ -154,14 +237,16 @@
     overflow: hidden;
 }
 
-.historycell {
-    width: 0;
+.historycell,
+.sharescell {
     height: 1.25em;
     margin-top: 0.125em;
     position: relative;
+    white-space: nowrap;
 }
 
-.historyuseravatar {
+.historyuseravatar,
+.sharesuseravatar {
     position: absolute;
     display: block;
     width: 1.75em;
@@ -178,7 +263,70 @@
     margin-top: -0.1em;
 }
 
-.historyactiontext, .historyusername, .historycelldate {
+.sharesaccessicon {
+    display: inline-block;
+    width: 1.25em;
+    height: 1.25em;
+    margin-right: 0.5em;
+    vertical-align: middle;
+}
+
+#newshares {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.85em;
+    display: block;
+    width: 100%;
+    border: 1px solid lightgray;
+    border-radius: 0.2em;
+    box-sizing: border-box;
+    background: #F5F6F7;
+    height: 2.5em;
+    float: right;
+    margin-top: 1em;
+}
+
+#newshares:hover {
+    cursor: pointer;
+}
+
+.sharesaccessextend {
+    background: #44a6c6;
+    position: absolute;
+    width: 1.75em;
+    height: 1.7em;
+    z-index: -10;
+    border-radius: 0.85em;
+    top: -0.25em;
+    left: -0.25em;
+}
+
+.sharesactioncell {
+    text-align: right;
+}
+
+.sharesedit, .sharesdelete {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75em;
+    display: inline-block;
+    width: 40%;
+    height: 1.75em;
+    border: 1px solid lightgray;
+    border-radius: 0.2em;
+    box-sizing: border-box;
+    background: #F5F6F7;
+    vertical-align: middle;
+}
+
+.sharesedit:hover, .sharesdelete:hover {
+    cursor: pointer;
+}
+
+.sharesdelete {
+    margin-left: 0.5em;
+}
+
+.historyactiontext, .historyusername, .historycelldate,
+.sharesusername {
     display: inline-block;
     white-space: nowrap;
     font-family: "Roboto Mono", monospace;
@@ -186,13 +334,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 0.25em;
+    height: 1.25em;
 }
 
 .historycelldate {
     margin-top: 0.5em;
 }
 
-.historyusername {
+.historyusername,
+.sharesusername {
     margin-left: 2.75em;
 }
 
@@ -200,15 +350,13 @@
     margin-left: 2.25em;
 }
 
-.historyheadercell, .historycell {
-    width: 15em;
-}
-
-#historyheader {
+#historyheader,
+#sharesheader {
     padding: 0.5em 0 0.5em 0.25em;
 }
 
-.historyentry {
+.historyentry,
+.sharesentry {
     padding: 0.4em 0 0.4em 0.25em;
     border-top: 1px solid lightgray;
 }

@@ -199,14 +199,47 @@
                     </div>
                 </div>
             </div>
+            <div id="entryshares" style="display: none;">
+                <div id="entrysharesbox">
+                    <div id="entrysharesclose" class="close">
+                        <img class="closesvg" src="/static/icon/clear.svg" />
+                    </div>
+                    <div id="entryshareslink">
+                        <div id="entryshareslinktext">Link:</div>
+                        <a id="entryshareslinka"></a>
+                    </div>
+                    <div id="sharesheader">
+                        <div id="sharesuser" class="sharesheadercell">User</div>
+                        <div id="sharesaccesslevel" class="sharesheadercell">Access level</div>
+                    </div>
+                    <div id="entryshareslist">
+                    </div>
+                    <input id="newshares" type="button" value="New">
+                </div>
+            </div>
+            <div id="sharesnew" style="display: none;">
+                <form id="sharesnewform" enctype="multipart/form-data">
+                    <div id="sharesnewclose" class="close">
+                        <img class="closesvg" src="/static/icon/clear.svg" />
+                    </div>
+                    <div class="sharesnewtext">Username</div>
+                    <input id="sharesnewusername" type="text" name="username" autocomplete="off" >
+                    <div class="sharesnewtext">Access level</div>
+                    <div id="sharesnewaccess">
+                        <div id="sharesnewaccessextend" style="width: 1.75em"></div><img id="sharesnewaccessiconview" src="/static/icon/view.svg"><img id="sharesnewaccessiconwrite" src="/static/icon/edit.svg"><img id="sharesnewaccessicondelete" src="/static/icon/delete.svg">
+                    </div>
+                    <div id="sharesnewerror"></div>
+                    <input id="sharesnewsubmit" type="submit" value="Share">
+                </form>
+            </div>
             <div id="passwordchange" style="display: none;">
                 <form id="passwordchangeform" enctype="multipart/form-data">
                     <div id="passwordchangeclose" class="close">
                         <img class="closesvg" src="/static/icon/clear.svg" />
                     </div>
-                    <div id="passwordchangetext">New password</div>
+                    <div class="passwordchangetext">New password</div>
                     <input id="newpassword" type="password" name="newpassword" autocomplete="off" >
-                    <div id="passwordchangetextrepeat">Repeat the password</div>
+                    <div class="passwordchangetext">Repeat the password</div>
                     <input id="newpasswordrepeat" type="password" name="newpasswordrepeat" autocomplete="off" >
                     <div id="passwordchangeerror"></div>
                     <input id="passwordchangesubmit" type="submit" value="Change Password">

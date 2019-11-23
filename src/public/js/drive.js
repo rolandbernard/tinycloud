@@ -56,12 +56,12 @@ async function get_shares(uuid) {
     }
 }
 
-async function post_share(uuid, username_or_null, accesslevel) {
+async function post_share(uuid, useruuid_or_null, accesslevel) {
     const token = get_token();
     let object;
-    if (username_or_null) {
+    if (useruuid_or_null) {
         object = {
-            username : username_or_null,
+            useruuid : useruuid_or_null,
             accesslevel : accesslevel
         };
     } else {
