@@ -141,13 +141,18 @@ app.post("/:uuid/share", async function(req, res) {
                     req.body.accesslevel === "rw" ||
                     req.body.accesslevel === "rwd") {
                     if (typeof (req.body.useruuid) === "string") {
-                        const [sharerows, sharefields] = await db.promise().query(sql.getentryusershare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid });
-                        if (sharerows.length === 1) {
-                            await db.promise().query(sql.updateshareaccesslevel, { shareuuid: sharerows[0].uuid, accesslevel: req.body.accesslevel });
-                            res.status(200).end();
+                        const [userrows, userfields] = await db.promise().query(sql.getuserbyuuid, { useruuid: req.body.useruuid });
+                        if (userrows.length === 1) {
+                            const [sharerows, sharefields] = await db.promise().query(sql.getentryusershare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid });
+                            if (sharerows.length === 1) {
+                                await db.promise().query(sql.updateshareaccesslevel, { shareuuid: sharerows[0].uuid, accesslevel: req.body.accesslevel });
+                                res.status(200).end();
+                            } else {
+                                await db.promise().query(sql.insertentryshare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid, accesslevel: req.body.accesslevel });
+                                res.status(200).end();
+                            }
                         } else {
-                            await db.promise().query(sql.insertentryshare, { useruuid: req.body.useruuid, entryuuid: req.params.uuid, accesslevel: req.body.accesslevel });
-                            res.status(200).end();
+                            res.status(404).end();
                         }
                     } else {
                         const [sharerows, sharefields] = await db.promise().query(sql.getentryallshare, { entryuuid: req.params.uuid });
@@ -297,7 +302,7 @@ app.put("/", async function (req, res) {
         }
     } else {
         res.status(401).end();
-    }   
+    }
 });
 
 app.put("/:uuid", async function (req, res) {
@@ -347,7 +352,7 @@ app.put("/:uuid", async function (req, res) {
             console.error(err);
             res.status(500).end();
         }
-    }   
+    }
 });
 
 app.delete("/:uuid", async function (req, res) {
