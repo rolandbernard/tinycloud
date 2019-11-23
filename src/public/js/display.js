@@ -134,7 +134,11 @@ function generate_entry(data, path_prefix) {
         node.draggable = true;
         node.addEventListener("dragstart", function (event) {
             event.dataTransfer.effectAllowed = "move";
-            event.dataTransfer.setData("text/plain", (data.isshare ? data.shareuuid : data.uuid));
+            const parentuuid = (path_prefix.length > 0 ? path_prefix[path_prefix.length - 1].uuid : null);
+            event.dataTransfer.setData("application/json", JSON.stringify({
+                entryuuid : (data.isshare ? data.shareuuid : data.uuid),
+                parentuuid : parentuuid,
+            }));
             event.dataTransfer.setDragImage(nodeicon, 0, 0);
         });
     }
@@ -186,11 +190,13 @@ function generate_dirview(data, path) {
         node.addEventListener("drop", function (event) {
             event.preventDefault();
             event.stopPropagation();
-            const drag_data = event.dataTransfer.getData("text/plain");
-            if (drag_data && drag_data.length === 36) {
-                move_entry(drag_data, data.uuid).then(function () {
-                    update_root_view_content();
-                });
+            const drag_data = JSON.parse(event.dataTransfer.getData("application/json"));
+            if (drag_data && drag_data.entryuuid && drag_data.entryuuid.length === 36) {
+                if (drag_data.parentuuid !== data.uuid) {
+                    move_entry(drag_data.entryuuid, data.uuid).then(function () {
+                        update_root_view_content();
+                    });
+                }
             } else {
                 upload_files_folders_drop(data.uuid, Array.from(event.dataTransfer.items).filter(function (el) {
                     return el.kind === "file";
