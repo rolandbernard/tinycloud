@@ -258,34 +258,6 @@ function unset_all_active() {
     active_entry = null;
 }
 
-function set_displayed_path(path) {
-    const pathdiv = document.getElementById("path");
-    delete_all_childs(pathdiv);
-    const node = document.createElement("img");
-    node.id = "pathroot";
-    node.className = "pathelement";
-    node.src = "/static/icon/home.svg";
-    node.addEventListener("click", function () {
-        change_path([]);
-        history.pushState({ path: [] }, "Tinycloud", "?path=" + encodeURI(JSON.stringify([])));
-    });
-    pathdiv.appendChild(node);
-    path.forEach(function (seg) {
-        const seperator = document.createElement("div");
-        seperator.className = "pathseperator";
-        pathdiv.appendChild(seperator);
-        const node = document.createElement("div");
-        node.className = "pathelement";
-        const path_prefix = path.slice(0, path.indexOf(seg) + 1);
-        node.addEventListener("click", function () {
-            change_path(path_prefix);
-            history.pushState({ path: path_prefix }, "Tinycloud", "?path=" + encodeURI(JSON.stringify(path_prefix)));
-        });
-        node.appendChild(document.createTextNode(seg.name));
-        pathdiv.appendChild(node);
-    });
-}
-
 function generate_owner_string(owner) {
     if (get_username() === owner) {
         return "me";

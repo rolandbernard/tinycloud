@@ -3,17 +3,20 @@
     font-family: "Roboto Mono", monospace;
     font-size: 1em;
     display: block;
-    margin: auto;
     padding: 2em;
     text-align: center;
     background: white;
     box-shadow: 0 0 5px 0 lightgray;
     border-radius: 0.3em;
     transition: linear 0.5s;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
 }
 
 #error:hover {
-    transform: rotateZ(720deg);
+    transform: translate(-50%, -50%) rotateZ(720deg);
 }
 
 #error h1 {

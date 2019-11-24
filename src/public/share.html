@@ -13,13 +13,14 @@
         <link rel="stylesheet" href="/static/css/explorer.css">
         <link rel="stylesheet" href="/static/css/overlays.css">
         <link rel="stylesheet" href="/static/css/menus.css">
+        <link rel="stylesheet" href="/static/css/error.css">
         <link rel="stylesheet" href="/static/css/loader.css">
         <link rel="stylesheet" href="/static/css/login.css">
         <script src="/static/js/drive.js"></script>
         <script src="/static/js/display.js"></script>
         <script src="/static/js/auth.js"></script>
         <script src="/static/js/misc.js"></script>
-        <script src="/static/js/home.js"></script>
+        <script src="/static/js/share.js"></script>
     </head>
     <body>
         <div id="page">
@@ -110,6 +111,9 @@
             </div>
         </div>
         <div id="overlays">
+            <div id="error" style="display: none;">
+                <h1>401</h1><br>You are not allowed to access this recource
+            </div>
             <div id="login" style="display: none;">
                 <form name="login" id="loginform">
                     <div id="signinheader">Sign in</div>

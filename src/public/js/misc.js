@@ -1,61 +1,4 @@
 
-let current_path = [];
-
-function change_path(path) {
-    current_path = path;
-    set_displayed_path(path);
-    unset_all_active();
-    generate_root_directory_content(get_drive_data(path.length > 0 ? path[path.length - 1].uuid : null), path);
-}
-
-function get_current_path() {
-    return current_path;
-}
-
-function user_login(username) {
-    const explorer = document.getElementById("explorer"); 
-    const login = document.getElementById("login");
-    const newbutton = document.getElementById("new");
-    explorer.style.display = "flex";
-    newbutton.style.display = "block";
-    login.style.display = "none";
-    delete_all_childs(infotexterror);
-    const user = document.getElementById("user");
-    const node = document.createElement("img");
-    delete_all_childs(user);
-    node.id = "useravatar";
-    node.src = "/api/v1/user/" + encodeURI(username) + "/avatar";
-    user.appendChild(node);
-    const path_json = (new URL(window.location.href)).searchParams.get("path");
-    if (path_json) {
-        change_path(JSON.parse(path_json));
-    } else {
-        change_path([]);
-    }
-    setInterval(async function () {
-        if(!await attemt_extention()) {
-            user_logout();
-        }
-    }, 3600000);
-}
-
-function user_logout() {
-    const explorer = document.getElementById("explorer"); 
-    const login = document.getElementById("login");
-    const newbutton = document.getElementById("new");
-    explorer.style.display = "none";
-    newbutton.style.display = "none";
-    login.style.display = "block";
-    delete_all_childs(infotexterror);
-    const user = document.getElementById("user");
-    delete_all_childs(user);
-    const root = document.getElementById("rootdirectory");
-    delete_all_childs(root);
-    const pathdiv = document.getElementById("path");
-    delete_all_childs(pathdiv);
-    delete_credentials();
-}
-
 let uploading_count = 0;
 
 function upload_start() {
@@ -148,12 +91,12 @@ window.addEventListener("contextmenu", function (event) {
 
 window.addEventListener("load", async function () {
     const page = document.getElementById("page");
-    const loginform = document.getElementById("loginform");
     const usernameinput = document.getElementById("username");
     const passwordinput = document.getElementById("password");
     const loginsubmit = document.getElementById("signin");
     const rememberme = document.getElementById("rememberme");
     const infotexterror = document.getElementById("infotexterror");
+    const loginform = document.getElementById("loginform");
     loginform.addEventListener("submit", async function (event) {
         event.preventDefault();
         usernameinput.disabled = true;
@@ -714,20 +657,6 @@ window.addEventListener("load", async function () {
         }
     });
 
-    const logged_in = await is_loggedin() || await attemt_login_with_saved();
-    const initialloader = document.getElementById("initialloader");
-    initialloader.parentNode.removeChild(initialloader);
-    if (logged_in) {
-        user_login(get_username());
-    } else {
-        user_logout();
-    }
-
-    window.addEventListener("focus", async function () {
-        if (!await is_loggedin()) {
-            user_logout();
-        }
-    });
-    setInterval(attemt_extention, 60*1000);
+    startup();
 });
 
