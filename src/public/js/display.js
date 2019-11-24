@@ -91,15 +91,15 @@ function generate_entry(data, path_prefix) {
         set_active(node);
         if (data.accesslevel.includes("w")) {
             renamemp.style.display = "block";
-            sharewithmp.style.display = "block";
         } else {
             renamemp.style.display = "none";
-            sharewithmp.style.display = "none";
         }
         if (data.accesslevel.includes("d")) {
             deletemp.style.display = "block";
+            sharewithmp.style.display = "block";
         } else {
             deletemp.style.display = "none";
+            sharewithmp.style.display = "none";
         }
         if (!data.isfolder && data.accesslevel.includes("w")) {
             updatemp.style.display = "block";
@@ -519,7 +519,7 @@ function generate_shares_entry(data) {
     const entry = get_active_entry();
     nodeactiondelete.addEventListener("click", async function () {
         delete_share(data.uuid);
-        generate_shares_content(await get_shares(entry.uuid), entry.uuid);
+        generate_shares_content(await get_shares(entry.data.uuid), entry.data.uuid);
     });
     nodeactiondelete.className = "sharesdelete";
     nodeactiondelete.type = "button";

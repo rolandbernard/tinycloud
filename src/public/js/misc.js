@@ -4,6 +4,7 @@ let current_path = [];
 function change_path(path) {
     current_path = path;
     set_displayed_path(path);
+    unset_all_active();
     generate_root_directory_content(get_drive_data(path.length > 0 ? path[path.length - 1].uuid : null), path);
 }
 
@@ -207,6 +208,14 @@ window.addEventListener("load", async function () {
         page.style.pointerEvents = "none";
     });
 
+    const sharelink = document.getElementById("sharelink");
+    const addshared = document.getElementById("addshared");
+    addshared.addEventListener("click", function () {
+        sharelink.style.display = "block";
+        // page.style.filter = "blur(1px)";
+        page.style.pointerEvents = "none";
+    });
+
     const fileupload = document.getElementById("fileupload");
     const uploadfile = document.getElementById("uploadfile");
     uploadfile.addEventListener("click", function () {
@@ -400,7 +409,7 @@ window.addEventListener("load", async function () {
     fileupdatebox.addEventListener("drop", function (event) {
         event.preventDefault();
         const entry = get_active_entry();
-        update_file_input(entry.uuid, Array.from(event.dataTransfer.items).filter(function (el) {
+        update_file_input(entry.data.uuid, Array.from(event.dataTransfer.items).filter(function (el) {
             return el.kind === "file";
         })[0].getAsFile());
         update_enter_exit = 0;
@@ -413,7 +422,7 @@ window.addEventListener("load", async function () {
     const fileupdateinput = document.getElementById("fileupdatein");
     fileupdateinput.addEventListener("change", function () {
         const entry = get_active_entry();
-        update_file_input(entry.uuid, fileupdateinput.files[0]);
+        update_file_input(entry.data.uuid, fileupdateinput.files[0]);
         fileupdate.style.display = "none";
         // page.style.filter = "none";
         page.style.pointerEvents = "all";
@@ -462,6 +471,50 @@ window.addEventListener("load", async function () {
         foldernewsubmit.disabled = false;
     });
 
+    const sharelinkerror = document.getElementById("sharelinkerror");
+    const sharelinkclose = document.getElementById("sharelinkclose");
+    const sharelinkinput = document.getElementById("sharelinklink");
+    sharelinkclose.addEventListener("click", function () {
+        sharelink.style.display = "none";
+        // page.style.filter = "none";
+        page.style.pointerEvents = "all";
+        sharelinkinput.value = "";
+        delete_all_childs(sharelinkerror);
+    });
+
+    const sharelinkform = document.getElementById("sharelinkform");
+    const sharelinksubmit = document.getElementById("sharelinksubmit");
+    sharelinkform.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        sharelinkinput.disabled = true;
+        sharelinksubmit.disabled = true;
+        const link = sharelinkinput.value;
+        delete_all_childs(sharelinkerror);
+        if (link === ""){
+            sharelinkerror.appendChild(document.createTextNode("Enter a link"));
+        }else{
+            const entry = get_active_entry();
+            const path = get_current_path();
+            const uuid = (entry !== null ? (entry.path.length > 1 ? entry.path[entry.path.length - 2].uuid : null) : (path.length > 0 ? path[path.length - 1].uuid : null));
+            const linkpath = (new URL(link)).pathname.split("/");
+            if (linkpath.length === 3 && linkpath[1] === "share" && linkpath[2].length === 36) {
+                if (await add_sharelink(uuid, linkpath[2])) {
+                    update_root_view_content();
+                    sharelink.style.display = "none";
+                    // page.style.filter = "none";
+                    page.style.pointerEvents = "all";
+                    sharelinkinput.value = "";
+                } else {
+                    sharelinkerror.appendChild(document.createTextNode("Couldn't add the link"));
+                }
+            } else {
+                sharelinkerror.appendChild(document.createTextNode("The link is not valid"));
+            }
+        }
+        sharelinkinput.disabled = false;
+        sharelinksubmit.disabled = false;
+    });
+
     const renameentry = document.getElementById("renameentry");
     const renameentryerror = document.getElementById("renameentryerror");
     const renameentryclose = document.getElementById("renameentryclose");
@@ -486,7 +539,7 @@ window.addEventListener("load", async function () {
         } else {
             const entry = get_active_entry();
             if (entry.data.name !== newname) {
-                await rename_entry(entry.uuid, newname);
+                await rename_entry(entry.data.uuid, newname);
                 update_root_view_content();
             }
             renameentry.style.display = "none";
@@ -554,8 +607,8 @@ window.addEventListener("load", async function () {
         delete_all_childs(sharesnewerror);
         if (username === ""){
             const entry = get_active_entry();
-            post_share(entry.uuid, null, accesslevel).then(async function () {
-                generate_shares_content(await get_shares(entry.uuid), entry.uuid);
+            post_share(entry.data.uuid, null, accesslevel).then(async function () {
+                generate_shares_content(await get_shares(entry.data.uuid), entry.data.uuid);
             });
             sharesnew.style.display = "none";
             // page.style.filter = "none";
@@ -564,8 +617,8 @@ window.addEventListener("load", async function () {
             const uuid = await get_useruuid(username);
             if (uuid) {
                 const entry = get_active_entry();
-                post_share(entry.uuid, uuid, accesslevel).then(async function () {
-                    generate_shares_content(await get_shares(entry.uuid), entry.uuid);
+                post_share(entry.data.uuid, uuid, accesslevel).then(async function () {
+                    generate_shares_content(await get_shares(entry.data.uuid), entry.data.uuid);
                 });
                 sharesnew.style.display = "none";
                 // page.style.filter = "none";
@@ -630,7 +683,7 @@ window.addEventListener("load", async function () {
     const history = document.getElementById("history");
     history.addEventListener("click", async function () {
         const entry = get_active_entry();
-        generate_history_content(await get_entry_history(entry.uuid));
+        generate_history_content(await get_entry_history(entry.data.uuid));
         entryhistory.style.display = "block";
         // page.style.filter = "blur(0.5px)";
         page.style.pointerEvents = "none";
@@ -639,7 +692,7 @@ window.addEventListener("load", async function () {
     const sharewith = document.getElementById("sharewith");
     sharewith.addEventListener("click", async function () {
         const entry = get_active_entry();
-        generate_shares_content(await get_shares(entry.uuid), entry.uuid);
+        generate_shares_content(await get_shares(entry.data.uuid), entry.data.uuid);
         entryshares.style.display = "block";
         // page.style.filter = "blur(0.5px)";
         page.style.pointerEvents = "none";

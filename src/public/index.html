@@ -206,7 +206,7 @@
                     </div>
                     <div id="entryshareslink">
                         <div id="entryshareslinktext">Link:</div>
-                        <a id="entryshareslinka"></a>
+                        <a target="_blank" id="entryshareslinka"></a>
                     </div>
                     <div id="sharesheader">
                         <div id="sharesuser" class="sharesheadercell">User</div>
@@ -230,6 +230,17 @@
                     </div>
                     <div id="sharesnewerror"></div>
                     <input id="sharesnewsubmit" type="submit" value="Share">
+                </form>
+            </div>
+            <div id="sharelink" style="display: none;">
+                <form id="sharelinkform" enctype="multipart/form-data">
+                    <div id="sharelinkclose" class="close">
+                        <img class="closesvg" src="/static/icon/clear.svg" />
+                    </div>
+                    <div id="sharelinktext">Link</div>
+                    <input id="sharelinklink" type="text" name="sharelinklink" autocomplete="off" >
+                    <div id="sharelinkerror"></div>
+                    <input id="sharelinksubmit" type="submit" value="Add">
                 </form>
             </div>
             <div id="passwordchange" style="display: none;">

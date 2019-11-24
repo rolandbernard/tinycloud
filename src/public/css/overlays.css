@@ -6,7 +6,8 @@
 #entryhistorybox,
 #entrysharesbox,
 #passwordchangeform,
-#sharesnewform {
+#sharesnewform,
+#sharelinkform {
     left: 50%;
     top: 40%;
     transform: translate(-50%, -50%);
@@ -55,7 +56,7 @@
     padding-left: 3.25em;
 }
 
-.fileuploaddrag {
+#fileuploaddrag {
     background: #eeeeee;
 }
 
@@ -80,7 +81,8 @@
 #foldername, #foldernewsubmit,
 #renameentrynewname, #renameentrysubmit,
 #newpassword, #newpasswordrepeat, #passwordchangesubmit,
-#sharesnewusername, #sharesnewsubmit {
+#sharesnewusername, #sharesnewsubmit,
+#sharelinklink, #sharelinksubmit {
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
     display: block;
@@ -97,19 +99,22 @@
 #foldernewsubmit,
 #renameentrysubmit,
 #passwordchangesubmit,
-#sharesnewsubmit {
+#sharesnewsubmit,
+#sharelinksubmit {
     background: #F5F6F7;
 }
 
 #foldernewsubmit:hover,
 #renameentrysubmit:hover,
 #passwordchangesubmit:hover,
-#sharesnewsubmit:hover {
+#sharesnewsubmit:hover,
+#sharelinksubmit:hover {
     cursor: pointer;
 }
 
 #foldernewtext,
 #renameentrytext,
+#sharelinktext,
 .passwordchangetext,
 .sharesnewtext {
     font-family: "Roboto Mono", monospace;
@@ -121,7 +126,8 @@
 #foldernewerror,
 #renameentryerror,
 #passwordchangeerror,
-#sharesnewerror {
+#sharesnewerror,
+#sharelinkerror {
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
     color: red;
@@ -133,7 +139,8 @@
 #foldername:focus,
 #renameentrynewname:focus,
 #newpassword:focus, #newpasswordrepeat:focus,
-#sharesnewusername:focus {
+#sharesnewusername:focus,
+#sharelinklink:focus {
     box-shadow: 0 0 0.5em 0 #44a6c6;
 }
 

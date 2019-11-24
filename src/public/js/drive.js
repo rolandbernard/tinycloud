@@ -242,10 +242,10 @@ async function upload_file(uuid_or_null, file) {
     }
 }
 
-async function add_sharelink(uuid_or_null, sharedentryuuid) {
+async function add_sharelink(uuid_or_null, shareentryuuid) {
     const token = get_token();
     const object = {
-        sharedentryuuid: sharedentryuuid
+        shareentryuuid: shareentryuuid
     };
     try {
         const response = await fetch("/api/v1/drive/" + (uuid_or_null || ""), {
