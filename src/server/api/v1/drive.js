@@ -136,7 +136,7 @@ app.post("/:uuid/share", async function(req, res) {
             const [accessrows, accessfields] = await db.promise().query(sql.getaccesslevel, { useruuid: (req.token !== undefined ? req.token.uuid : null), entryuuid: req.params.uuid });
             if (accessrows[0].accesslevel === null) {
                 res.status(404).end();
-            } else if (accessrows[0].accesslevel.includes("w")) {
+            } else if (accessrows[0].accesslevel.includes("d")) {
                 if (req.body.accesslevel === "r" ||
                     req.body.accesslevel === "rw" ||
                     req.body.accesslevel === "rwd") {
