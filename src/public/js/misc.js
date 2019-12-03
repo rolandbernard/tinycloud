@@ -116,7 +116,7 @@ window.addEventListener("load", async function () {
                 user_login(username);
             } else {
                 delete_all_childs(infotexterror);
-                infotexterror.appendChild(document.createTextNode("Wrong username or password"));
+                infotexterror.appendChild(document.createTextNode("Sign in failed"));
             }
         }
         usernameinput.disabled = false;
@@ -659,4 +659,3 @@ window.addEventListener("load", async function () {
 
     startup();
 });
-

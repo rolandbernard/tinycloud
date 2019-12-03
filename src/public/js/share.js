@@ -39,6 +39,9 @@ async function change_path(path) {
         generate_root_directory_content(get_drive_data(path[path.length - 1].uuid), path);
     } else {
             const data = await get_drive_data(global_uuid);
+            if (data.accesslevel === "rwd") {
+                data.accesslevel = "rw";
+            }
             const error = document.getElementById("error");
             if (!data) {
                 error.style.display = "block";

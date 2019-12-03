@@ -134,6 +134,7 @@
 .entryname {
     font-family: "Roboto Mono", monospace;
     font-size: 0.85em;
+    color: black;
     padding-left: 0.75em;
     flex: 1 1 auto;
     width: 0;

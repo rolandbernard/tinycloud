@@ -2,6 +2,7 @@
 #error {
     font-family: "Roboto Mono", monospace;
     font-size: 1em;
+    color: black;
     display: block;
     padding: 2em;
     text-align: center;
@@ -15,9 +16,9 @@
     position: absolute;
 }
 
-#error:hover {
-    transform: translate(-50%, -50%) rotateZ(720deg);
-}
+/* #error:hover { */
+/*     transform: translate(-50%, -50%) rotateZ(720deg); */
+/* } */
 
 #error h1 {
     font-family: "Roboto Mono", monospace;

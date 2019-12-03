@@ -40,5 +40,10 @@ const options = {
     cert: config.keys.public
 };
 
-http.createServer(app).listen(config.ports.http);
-https.createServer(options, app).listen(config.ports.https);
+if (config.ports.http) {
+    http.createServer(app).listen(config.ports.http);
+}
+if (config.ports.https) {
+    https.createServer(options, app).listen(config.ports.https);
+}
+
