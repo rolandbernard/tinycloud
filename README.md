@@ -1,8 +1,7 @@
 Tinycloud
 =========
 
-Tinycloud is a small webapplication focused on storing and sharing files.
-It is not yet fully implemented.
+Tinycloud is a small web application focused on storing and sharing files.
 
 ![Example image](doc/example.png)
 
